@@ -1,0 +1,19 @@
+html, body {
+    background-color: #d0dadf;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.Resizer {
+  background: #000;  /* default color */
+  opacity: 1;
+  z-index: 1;
+  box-sizing: border-box;
+  background-clip: padding-box;
+}
+
+textarea {
+    resize: none;
+    font-size: 18px;
+}
