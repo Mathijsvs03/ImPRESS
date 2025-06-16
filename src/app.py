@@ -24,7 +24,7 @@ def run_ui(initial_history=None):
     prompt_panel_container = html.Div(id="prompt-panel-container")
     view_panel_widget = build_view_panel()
     history_panel_widget = build_history_panel()
-    modal_container = html.Div(build_prompt_modal(), style={"display": "none"})  # <- include it in layout
+    modal_container = html.Div(build_prompt_modal(), style={"display": "none"})
 
     app.layout = dbc.Container([
         dcc.Store(id="history-store", data=initial_history),
