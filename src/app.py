@@ -3,24 +3,28 @@ import dash_bootstrap_components as dbc
 import base64
 import os
 
-from src.widgets.prompt_panel import build_prompt_panel
-from src.widgets.view_panel import build_view_panel
-from src.widgets.history_panel import build_history_panel
+from widgets.prompt_panel import build_prompt_modal
+from widgets.view_panel import build_view_panel
+from widgets.history_panel import build_history_panel
 
 import callbacks.generator
 import callbacks.history
 import callbacks.view
+import callbacks.llm_suggestion
+
 
 def run_ui(initial_history=None):
     external_stylesheets = [dbc.themes.BOOTSTRAP]
     app = Dash(
         __name__,
-        external_stylesheets=external_stylesheets
+        external_stylesheets=external_stylesheets,
+        suppress_callback_exceptions=True
     )
 
-    prompt_panel_widget = build_prompt_panel(keywords=['Keyword 1', 'Keyword 2', 'Keyword 3'])
+    prompt_panel_container = html.Div(id="prompt-panel-container")
     view_panel_widget = build_view_panel()
     history_panel_widget = build_history_panel()
+    modal_container = html.Div(build_prompt_modal(), style={"display": "none"})  # <- include it in layout
 
     app.layout = dbc.Container([
         dcc.Store(id="history-store", data=initial_history),
@@ -29,7 +33,10 @@ def run_ui(initial_history=None):
 
         dbc.Row([
             dbc.Col(
-                prompt_panel_widget,
+                html.Div([
+                    prompt_panel_container,
+                    modal_container
+                ]),
                 style={'borderRight': '1px solid #ccc', 'paddingRight': '15px'},
                 className="h-100 d-flex flex-column",
                 width=4
@@ -46,7 +53,7 @@ def run_ui(initial_history=None):
         ], className='gx-4 gy-2', align='start', style={'height': '100%', 'overflowY': 'auto'})
     ], fluid=True, style={"height": "100%"})
 
-    app.run_server(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=False)
 
 
 def main():

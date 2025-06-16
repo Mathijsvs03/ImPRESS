@@ -15,6 +15,15 @@ def build_view_panel():
                 labelStyle={"display": "inline-block", "marginRight": "20px"},
                 style={"marginBottom": "10px"}
             ),
-            html.Div(id="main-view", style={'height': '100%', 'width': '100%', 'padding': '10px'})
+            html.Div(
+                id="main-view",
+                style={
+                    'height': '100%',
+                    'width': '100%',
+                    'padding': '10px',
+                    'overflowY': 'auto',
+                    'maxHeight': '400px'
+                }
+            )
         ])
-    ])
+    ], style={"height": "500px"})

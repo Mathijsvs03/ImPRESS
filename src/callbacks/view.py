@@ -1,5 +1,7 @@
 from dash import html, dcc, callback, Output, Input
 import dash_bootstrap_components as dbc
+from widgets.prompt_panel import build_prompt_panel
+from widgets.keyword_panel import build_keyword_panel
 
 
 @callback(
@@ -15,6 +17,7 @@ def update_main_view(view_mode, selected_image):
             dbc.CardHeader("Clustered Dataset View"),
             dbc.CardBody(
                 html.Div("This is where clustered images will appear.", style={
+                    'width': '512px',
                     'height': '500px',
                     'backgroundColor': '#f1f3f5',
                     'border': '2px dashed #ccc',
@@ -36,3 +39,14 @@ def update_main_view(view_mode, selected_image):
                 )
             )
         ])
+
+@callback(
+    Output("prompt-panel-container", "children"),
+    Input("view-toggle", "value"),
+    prevent_initial_call=False
+)
+def switch_prompt_panel(view_mode):
+    keywords = ["Keyword 1", "Keyword 2", "Keyword 3"]
+    if view_mode == "cluster":
+        return build_keyword_panel(keywords)
+    return build_prompt_panel(keywords)
