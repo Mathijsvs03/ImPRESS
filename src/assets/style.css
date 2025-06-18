@@ -41,6 +41,52 @@ textarea {
   display: none;
 }
 
+.prompt-field {
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.dist-list {
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.dist-graph {
+  height: 100px;
+  background: #829198;
+}
+
+.view-container {
+  height: 500px;
+}
+
+.view-items {
+  margin-bottom: 0px;
+}
+
+.view {
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.cluster-field {
+  width: 512px;
+  height: 500px;
+  background-color: #f1f3f5;
+  border: 2px dashed #ccc;
+  text-align: center;
+  line-height: 500px;
+  color: #666;
+}
+
+.gen-image {
+  max-width: 512px;
+  max-height: 512px;
+}
+
 .history-panel {
   display: flex;
   flex-direction: row;
@@ -48,4 +94,26 @@ textarea {
   padding: 10px;
   height: 100%;
   white-space: nowrap;
+}
+
+.history-entry {
+  min-width: 200px;
+  margin-right: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+}
+
+.hist-entry-button {
+  border: none;
+  background: none;
+  text-align: left;
+  width: 100%;
+}
+
+.history-image {
+  height: 150px;
+  width: 100%;
+  object-fit: cover;
 }
