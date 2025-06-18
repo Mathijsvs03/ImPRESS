@@ -1,0 +1,22 @@
+
+Working on snellius steps:
+
+1. connect to eduvpn, or science park network locally
+
+2. ssh <user>@snellius.surf.nl
+
+3. Pull project from git, or use rsync (switch to snellius branch)
+
+4. run setup_venv.job with "sbatch setup_venv.job"
+
+Now we can run the app
+
+5. srun --partition=gpu_mig --gpus=1 --ntasks=1 --cpus-per-task=1 --time=00:20:00 --pty bash -i
+
+6. source venv/bin/activate
+
+6.b Ik had een issue met de venv op een srun node, dus mogelijk moet je op de srun node nog eens "pip install -r requirements.txt" runnen
+
+7. python -m src.app
+
+8. On local device: ssh -L 8050:127.0.0.1:8050 -J <user>@snellius.surf.nl <user>@<node hostname>
