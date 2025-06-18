@@ -17,9 +17,10 @@ class Dataset:
             print("Dataset already loaded.")
             return
 
-        with open(config.RUNTIME_CONFIG_PATH) as f:
-            config_data = json.load(f)
-            Dataset.augmented_path = config_data.get('AUGMENTED_DATASET_PATH', None)
+        if os.path.exists(config.RUNTIME_CONFIG_PATH):
+            with open(config.RUNTIME_CONFIG_PATH) as f:
+                config_data = json.load(f)
+                Dataset.augmented_path = config_data.get('AUGMENTED_DATASET_PATH', None)
 
         print("Loading dataset...")
         if not Dataset.files_exist():
@@ -33,7 +34,7 @@ class Dataset:
         if Dataset.data is None:
             raise ValueError("Dataset could not be loaded. Please check the data source.")
 
-        Dataset.data = Dataset.data.cast_column("image", DatasetImage(decode=True))
+        # Dataset.data = Dataset.data.cast_column("image", DatasetImage(decode=True)) # Uncomment if you want to load all images in memory
         Dataset.count = Dataset.data.num_rows
         print(f"Finished loading dataset with {Dataset.count} entries.")
 
