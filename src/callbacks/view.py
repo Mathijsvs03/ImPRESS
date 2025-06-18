@@ -2,6 +2,7 @@ from dash import html, dcc, callback, Output, Input
 import dash_bootstrap_components as dbc
 from src.widgets.prompt_panel import build_prompt_panel
 from src.widgets.keyword_panel import build_keyword_panel
+from src.widgets import scatterplot
 
 
 @callback(
@@ -16,15 +17,10 @@ def update_main_view(view_mode, selected_image):
         return dbc.Card([
             dbc.CardHeader("Clustered Dataset View"),
             dbc.CardBody(
-                html.Div("This is where clustered images will appear.", style={
-                    'width': '512px',
-                    'height': '500px',
-                    'backgroundColor': '#f1f3f5',
-                    'border': '2px dashed #ccc',
-                    'textAlign': 'center',
-                    'lineHeight': '500px',
-                    'color': '#666'
-                })
+                dcc.Loading(
+                    scatterplot.create_scatterplot('UMAP'),
+                    type="circle"
+                )
             )
         ])
     else:

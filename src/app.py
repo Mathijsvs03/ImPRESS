@@ -12,6 +12,7 @@ import src.callbacks.generator
 import src.callbacks.history
 import src.callbacks.view
 import src.callbacks.llm_suggestion
+import src.callbacks.scatterplot
 
 
 def run_ui(initial_history=None):
