@@ -1,7 +1,7 @@
 from dash import html, dcc, callback, Output, Input
 import dash_bootstrap_components as dbc
-from widgets.prompt_panel import build_prompt_panel
-from widgets.keyword_panel import build_keyword_panel
+from src.widgets.prompt_panel import build_prompt_panel
+from src.widgets.keyword_panel import build_keyword_panel
 
 
 @callback(

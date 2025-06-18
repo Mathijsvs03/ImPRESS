@@ -3,14 +3,15 @@ import dash_bootstrap_components as dbc
 import base64
 import os
 
-from widgets.prompt_panel import build_prompt_modal
-from widgets.view_panel import build_view_panel
-from widgets.history_panel import build_history_panel
+from src.Dataset import Dataset
+from src.widgets.prompt_panel import build_prompt_modal
+from src.widgets.view_panel import build_view_panel
+from src.widgets.history_panel import build_history_panel
 
-import callbacks.generator
-import callbacks.history
-import callbacks.view
-import callbacks.llm_suggestion
+import src.callbacks.generator
+import src.callbacks.history
+import src.callbacks.view
+import src.callbacks.llm_suggestion
 
 
 def run_ui(initial_history=None):
@@ -57,6 +58,8 @@ def run_ui(initial_history=None):
 
 
 def main():
+    Dataset.load()
+
     folder = "src/assets/templates"
     template_history = []
     if not os.path.exists(folder):
@@ -70,7 +73,7 @@ def main():
                 src = f"data:image/png;base64,{encoded}"
                 template_history.append({"src": src, "prompt": f"Template: {filename}"})
 
-    print("Starting Dash app")
+    print("Starting Dash App")
     run_ui(initial_history=template_history)
 
 

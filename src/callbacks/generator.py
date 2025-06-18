@@ -5,7 +5,7 @@ import torch
 import dash
 from dash import Input, Output, callback, State, ALL, ctx
 from diffusers import StableDiffusionPipeline
-import utils, config
+from src import utils, config
 
 pipe_lock = threading.Lock()
 device = utils.get_device()
