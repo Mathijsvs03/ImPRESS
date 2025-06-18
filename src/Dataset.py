@@ -1,4 +1,5 @@
 import os
+import json
 
 from datasets import load_from_disk, Image as DatasetImage
 from src import config
@@ -8,6 +9,7 @@ from src.utils import generate_projections
 class Dataset:
     data = None
     count = None
+    augmented_path = None
 
     @staticmethod
     def load():
@@ -15,13 +17,22 @@ class Dataset:
             print("Dataset already loaded.")
             return
 
+        with open(config.RUNTIME_CONFIG_PATH) as f:
+            config_data = json.load(f)
+            Dataset.augmented_path = config_data.get('AUGMENTED_DATASET_PATH', None)
+
         print("Loading dataset...")
-        if not os.path.exists(config.AUGMENTED_DATASET_PATH):
+        if not Dataset.files_exist():
             dataset = diffDB_loader.load()
-            print(dataset['train'][0])  # Print the first entry as a sample
+            with open(config.RUNTIME_CONFIG_PATH) as f:
+                Dataset.augmented_path = json.load(f).get('AUGMENTED_DATASET_PATH')
+
             generate_projections(dataset)
 
-        Dataset.data = load_from_disk(config.AUGMENTED_DATASET_PATH)
+        Dataset.data = load_from_disk(Dataset.augmented_path) if Dataset.augmented_path else None
+        if Dataset.data is None:
+            raise ValueError("Dataset could not be loaded. Please check the data source.")
+
         Dataset.data = Dataset.data.cast_column("image", DatasetImage(decode=True))
         Dataset.count = Dataset.data.num_rows
         print(f"Finished loading dataset with {Dataset.count} entries.")
@@ -40,4 +51,5 @@ class Dataset:
 
     @staticmethod
     def files_exist():
-        return os.path.exists(config.AUGMENTED_DATASET_PATH) and os.path.exists(config.DATASET_PATH)
+        augmented_exists = Dataset.augmented_path is not None and os.path.exists(Dataset.augmented_path)
+        return os.path.exists(config.RUNTIME_CONFIG_PATH) and augmented_exists

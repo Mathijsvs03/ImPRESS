@@ -1,6 +1,7 @@
 import base64
 import torch
 import clip
+import json
 import numpy as np
 
 from PIL import Image
@@ -85,4 +86,9 @@ def generate_projections(dataset=None):
 
     augmented_data = DatasetDict({"train": augmented_train})
 
-    augmented_data.save_to_disk(config.AUGMENTED_DATASET_PATH)
+    with open(config.RUNTIME_CONFIG_PATH) as f:
+        augmented_path = json.load(f).get('AUGMENTED_DATASET_PATH', None)
+        if not augmented_path:
+            raise ValueError("AUGMENTED_DATASET_PATH not found in runtime config.")
+
+    augmented_data.save_to_disk(augmented_path)
