@@ -5,6 +5,11 @@ html, body {
     overflow: hidden;
 }
 
+textarea {
+    resize: none;
+    font-size: 18px;
+}
+
 .Resizer {
   background: #000;  /* default color */
   opacity: 1;
@@ -13,7 +18,34 @@ html, body {
   background-clip: padding-box;
 }
 
-textarea {
-    resize: none;
-    font-size: 18px;
+.main-container {
+  height: 100%;
+}
+
+.header-title {
+  text-align: left;
+  margin: 10px;
+}
+
+.col-container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.left-col {
+  border-right: 1px solid #ccc;
+  padding-right: 15px;
+}
+
+.modal-container {
+  display: none;
+}
+
+.history-panel {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  padding: 10px;
+  height: 100%;
+  white-space: nowrap;
 }
