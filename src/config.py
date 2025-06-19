@@ -3,6 +3,7 @@ from pathlib import Path
 
 # UI config
 GENERATED_IMAGE_SIZE = (512, 512)
+MAX_IMAGES_IN_ZOOM = 100
 
 # path configuration
 ROOT_DIR = Path(__file__).parent.parent

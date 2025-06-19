@@ -5,13 +5,16 @@ import os
 
 from src.Dataset import Dataset
 from src.widgets.prompt_panel import build_prompt_modal
-from src.widgets.view_panel import build_view_panel
 from src.widgets.history_panel import build_history_panel
+from src.widgets.scatterplot import create_scatterplot
+from src.widgets.image_display import create_image_display
 
 import src.callbacks.generator
 import src.callbacks.history
-import src.callbacks.view
+import src.callbacks.switch_panels
 import src.callbacks.llm_suggestion
+import src.callbacks.scatterplot
+import src.callbacks.image_display
 
 os.environ['FLASK_ENV'] = 'development' # Auto-update style.css changes
 
@@ -24,9 +27,13 @@ def run_ui(initial_history=None):
     )
 
     prompt_panel_container = html.Div(id="prompt-panel-container")
-    view_panel_widget = build_view_panel()
     history_panel_widget = build_history_panel()
     modal_container = html.Div(build_prompt_modal(), className='modal-container')
+
+    right_tab = dcc.Tabs([
+        dcc.Tab(label="Generated Image", value="generated", children=create_image_display()),
+        dcc.Tab(label="Clustered View", value="cluster", children=create_scatterplot('UMAP'))
+    ], id="view-toggle", value="generated")
 
     app.layout = dbc.Container([
         dcc.Store(id="history-store", data=initial_history),
@@ -47,7 +54,7 @@ def run_ui(initial_history=None):
             # Right column in app view
             dbc.Col(
                 dbc.Stack([
-                    view_panel_widget,
+                    right_tab,
                     html.Hr(),
                     history_panel_widget
                 ]),
