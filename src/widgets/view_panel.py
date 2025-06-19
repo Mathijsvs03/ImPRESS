@@ -5,25 +5,18 @@ def build_view_panel():
     return dbc.Card([
         dbc.CardHeader("Image View"),
         dbc.CardBody([
-            dcc.RadioItems(
+            dcc.Tabs(
                 id="view-toggle",
-                options=[
-                    {"label": "Generated Image", "value": "generated"},
-                    {"label": "Clustered View", "value": "cluster"},
-                ],
                 value="generated",
-                labelStyle={"display": "inline-block", "marginRight": "20px"},
-                style={"marginBottom": "10px"}
+                children=[
+                    dcc.Tab(label="Generated Image", value="generated"),
+                    dcc.Tab(label="Clustered View", value="cluster")
+                ],
+                className="view-items"
             ),
             html.Div(
                 id="main-view",
-                style={
-                    'height': '100%',
-                    'width': '100%',
-                    'padding': '10px',
-                    'overflowY': 'auto',
-                    'maxHeight': '400px'
-                }
+                className="view"
             )
         ])
-    ], style={"height": "500px"})
+    ], className="view-container")

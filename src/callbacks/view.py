@@ -28,9 +28,8 @@ def update_main_view(view_mode, selected_image):
             dbc.CardHeader("Generated Image"),
             dbc.CardBody(
                 dcc.Loading(
-                    html.Img(src=selected_image, id="generated-image", style={
-                        'maxWidth': '512px', 'maxHeight': '512px'
-                    }),
+                    html.Img(src=selected_image, id="gen-image",
+                             className="gen-image"),
                     type="circle"
                 )
             )

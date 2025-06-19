@@ -10,21 +10,10 @@ def update_history_display(history):
     return [
         dbc.Card([
             dbc.Button([
-                html.Img(src=item["src"], style={'height': '150px', 'width': '100%', 'objectFit': 'cover'}),
+                html.Img(src=item["src"], className="history-image"),
                 html.H6(item["prompt"], className='mt-2')
-            ], id={'type': 'thumb', 'index': i}, n_clicks=0, style={
-                'border': 'none',
-                'background': 'none',
-                'textAlign': 'left',
-                'width': '100%'
-            })
-        ], style={
-            'minWidth': '200px',
-            'marginRight': '10px',
-            'padding': '10px',
-            'border': '1px solid #ccc',
-            'borderRadius': '5px',
-            'backgroundColor': '#f8f9fa'
-        })
+            ], id={'type': 'thumb', 'index': i}, n_clicks=0,
+                       className="hist-entry-button")
+        ], className="history-entry")
         for i, item in enumerate(reversed(history))
     ]

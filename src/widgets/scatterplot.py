@@ -106,7 +106,7 @@ def create_scatterplot(projection):
             'displaylogo': False,
             'modeBarButtonsToRemove': ['autoscale']
         },
-        style={'height': '100%', 'width': '100%', 'border-radius': '0.375rem', 'border': '1px solid #babfc7'}
+        className="cluster-field"
     )
 
 

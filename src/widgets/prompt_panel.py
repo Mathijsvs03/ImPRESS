@@ -5,20 +5,20 @@ def build_prompt_panel(keywords):
     key_dist_list = html.Div([
         html.Div([
             html.H5(kw),
-            html.Div("Distribution graph", style={'height': '100px', 'background': '#829198'})
+            html.Div("Distribution graph", className="dist-graph")
         ], className="mb-3")
         for kw in keywords
-    ], style={'maxHeight': '40vh', 'overflowY': 'auto'})
+    ], className="dist-list")
 
     return html.Div([
         dbc.Card([
             dbc.CardHeader("Prompt Configuration", className="bg-light"),
             dbc.CardBody([
                 dbc.Label("Prompt"),
-                dbc.Textarea(id="Prompt", placeholder="Enter prompt", style={'marginBottom': '1rem'}),
+                dbc.Textarea(id="Prompt", placeholder="Enter prompt", className="promp-field"),
 
                 dbc.Label("Negative Prompt"),
-                dbc.Textarea(id="NegPrompt", placeholder="Enter negative prompt", style={'marginBottom': '1rem'}),
+                dbc.Textarea(id="NegPrompt", placeholder="Enter negative prompt", className="prompt-field"),
 
                 dbc.Label("Guidance Scale"),
                 dcc.RangeSlider(
@@ -33,7 +33,7 @@ def build_prompt_panel(keywords):
 
                 html.Hr(),
             ])
-        ], style={"height": "100%"}, className="flex-grow-1"),
+        ], className="flex-grow-1 main-container"),
     ])
 
 def build_prompt_modal():
