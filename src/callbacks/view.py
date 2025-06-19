@@ -16,15 +16,8 @@ def update_main_view(view_mode, selected_image):
         return dbc.Card([
             dbc.CardHeader("Clustered Dataset View"),
             dbc.CardBody(
-                html.Div("This is where clustered images will appear.", style={
-                    'width': '512px',
-                    'height': '500px',
-                    'backgroundColor': '#f1f3f5',
-                    'border': '2px dashed #ccc',
-                    'textAlign': 'center',
-                    'lineHeight': '500px',
-                    'color': '#666'
-                })
+                html.Div("This is where clustered images will appear.",
+                         className="cluster-field")
             )
         ])
     else:
@@ -32,9 +25,8 @@ def update_main_view(view_mode, selected_image):
             dbc.CardHeader("Generated Image"),
             dbc.CardBody(
                 dcc.Loading(
-                    html.Img(src=selected_image, id="generated-image", style={
-                        'maxWidth': '512px', 'maxHeight': '512px'
-                    }),
+                    html.Img(src=selected_image, id="gen-image",
+                             className="gen-image"),
                     type="circle"
                 )
             )
