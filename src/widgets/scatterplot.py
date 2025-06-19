@@ -1,9 +1,10 @@
 from PIL import Image
-from dash import dcc
+from dash import dcc, html
 import plotly.express as px
 from src.Dataset import Dataset
-from src import config
+from src import config, utils
 import plotly.graph_objects as go
+import dash_bootstrap_components as dbc
 
 
 def add_images_to_scatterplot(figure):
@@ -23,19 +24,25 @@ def add_images_to_scatterplot(figure):
         if len (images_in_zoom) > config.MAX_IMAGES_IN_ZOOM:
             return figure
 
+    zoom_scale_x = (max_x - min_x)
+    zoom_scale_y = (max_y - min_y)
+    image_scale = 0.5
+
     if images_in_zoom:
-        print(images_in_zoom[0])
         for x, y, image in images_in_zoom:
+            image_src = utils.image_to_base64_thumbnail(image, target_size=(64, 64))
             figure['layout']['images'].append(dict(
                 x=x,
                 y=y,
-                source=Image.open(image),
+                source=image_src,
                 xref='x',
                 yref='y',
-                sizex=0.05,
-                sizey=0.05,
+                sizex=zoom_scale_x * image_scale,
+                sizey=zoom_scale_y * image_scale,
                 xanchor='center',
                 yanchor='middle',
+                layer='above',
+                opacity=1.0
             ))
         return figure
     return figure
@@ -58,11 +65,13 @@ def create_scatterplot_figure(projection):
     fig.update_traces(
         customdata=Dataset.get_data()['train']['image'],
         marker={'color': 'rgba(31, 119, 180, 0.5)', 'size': 4},
-        unselected_marker_opacity=0.60
+        unselected_marker_opacity=0.60,
+        hovertemplate=None,
+        hoverinfo='skip',
     )
     fig.update_layout(dragmode='select')
     fig.update_xaxes(titlefont=dict(size=12), tickfont=dict(size=10))
-    fig.update_yaxes(titlefont=dict(size=12), tickfont=dict(size=10), scaleanchor="x", scaleratio=1)
+    fig.update_yaxes(titlefont=dict(size=12), tickfont=dict(size=10), scaleanchor=None)
     fig.add_trace(
         go.Scatter(
             x=[None],
@@ -81,9 +90,6 @@ def create_scatterplot_figure(projection):
             marker=dict(size=7, color="red", symbol='circle'),
         ),
     )
-    fig.update_traces(
-        hoverinfo='skip', hovertemplate=None,
-    )
 
     fig.update_layout(legend=dict(
         orientation="h",
@@ -97,26 +103,31 @@ def create_scatterplot_figure(projection):
 
 
 def create_scatterplot(projection):
-    return dcc.Graph(
-        figure=create_scatterplot_figure(projection),
-        id='scatterplot',
-        responsive=True,
-        config={
-            'displayModeBar': True,
-            'displaylogo': False,
-            'modeBarButtonsToRemove': ['autoscale']
-        },
-        className="cluster-field"
-    )
+    return dbc.Card([
+        dbc.CardBody([
+            dcc.Graph(
+                figure=create_scatterplot_figure(projection),
+                id='scatterplot',
+                responsive=True,
+                config={
+                    'displaylogo': False,
+                    'modeBarButtonsToRemove': ['autoscale'],
+                    'displayModeBar': True,
+                    'scrollZoom': True,
+                    'doubleClick': 'reset',
+                },
+                className="cluster-field"
+            ),
+            html.Div(id='scatterplot_selection', className='selection-info'),
+        ])
+    ])
 
 
-def get_selected_data(figure):
-    figure_data = figure['data'][0]
+# Not in use yet, but useful for selection callbacks
+def get_selected_data(selected_data):
     dataset = Dataset.get_data()['train']
-    if 'selectedpoints' in figure_data:
-        selected_images = list(map(figure_data['customdata'].__getitem__, figure_data['selectedpoints']))
-        data_selected = dataset.loc[selected_images]
+    if selected_data and "points" in selected_data:
+        selected_indices = [pt["pointIndex"] for pt in selected_data["points"]]
+        return dataset.select(selected_indices)
     else:
-        data_selected = dataset
-
-    return data_selected
+        return dataset
