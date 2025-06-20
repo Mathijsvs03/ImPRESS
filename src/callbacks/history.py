@@ -11,7 +11,7 @@ def update_history_display(history):
         dbc.Card([
             dbc.Button([
                 html.Img(src=item["src"], className="history-image"),
-                html.H6(item["prompt"], className='mt-2')
+                html.H6(item["prompt"], className='mt-2 history-prompt')
             ], id={'type': 'thumb', 'index': i}, n_clicks=0,
                        className="hist-entry-button")
         ], className="history-entry")

@@ -1,4 +1,4 @@
-from datasets import load_dataset, Image as DatasetImage
+from datasets import load_dataset, Image as DatasetImage, logging
 from src import config
 
 import json
@@ -51,6 +51,7 @@ def save_runtime_config(entries, augmented_cache_dir):
 
 
 def load():
+    logging.set_verbosity_debug()
     dataset = load_dataset('poloclub/diffusiondb', 'large_first_10k', cache_dir=config.DATASET_DIR, trust_remote_code=True).cast_column("image", DatasetImage(decode=False))
     cache_dir = dataset.cache_files['train'][0]['filename'].split('/')
     augmented_cache_dir = os.path.join(cache_dir[7], 'augmented_' + cache_dir[8], cache_dir[9])

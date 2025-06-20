@@ -1,15 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import html, dcc
 
-def build_prompt_panel(keywords):
-    key_dist_list = html.Div([
-        html.Div([
-            html.H5(kw),
-            html.Div("Distribution graph", className="dist-graph")
-        ], className="mb-3")
-        for kw in keywords
-    ], className="dist-list")
-
+def build_prompt_panel():
     return html.Div([
         dbc.Card([
             dbc.CardHeader("Prompt Configuration", className="bg-light"),
@@ -32,6 +24,8 @@ def build_prompt_panel(keywords):
                 dbc.Button("Generate Prompt", id="generate-prompt-button", color="secondary", className="mt-3"),
 
                 html.Hr(),
+
+                html.Div(build_prompt_modal(), className='modal-container'),
             ])
         ], className="flex-grow-1 main-container"),
     ])

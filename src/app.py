@@ -5,6 +5,7 @@ import os
 
 from src.Dataset import Dataset
 from src.widgets.prompt_panel import build_prompt_modal
+from src.widgets.input_panel import build_input_panel
 from src.widgets.view_panel import build_view_panel
 from src.widgets.history_panel import build_history_panel
 
@@ -23,10 +24,8 @@ def run_ui(initial_history=None):
         suppress_callback_exceptions=True
     )
 
-    prompt_panel_container = html.Div(id="prompt-panel-container")
+    input_panel_widget = build_input_panel()
     view_panel_widget = build_view_panel()
-    history_panel_widget = build_history_panel()
-    modal_container = html.Div(build_prompt_modal(), className='modal-container')
 
     app.layout = dbc.Container([
         dcc.Store(id="history-store", data=initial_history),
@@ -36,21 +35,14 @@ def run_ui(initial_history=None):
         dbc.Row([
             # Left column in app view
             dbc.Col(
-                html.Div([
-                    prompt_panel_container,
-                    modal_container
-                ]),
+                input_panel_widget,
                 className="h-100 d-flex flex-column left-col",
                 width=4
             ),
 
             # Right column in app view
             dbc.Col(
-                dbc.Stack([
-                    view_panel_widget,
-                    html.Hr(),
-                    history_panel_widget
-                ]),
+                view_panel_widget,
                 width=8
             )
         ], className='gx-4 gy-2 col-container', align='start')
