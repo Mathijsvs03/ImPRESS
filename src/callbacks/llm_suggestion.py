@@ -1,41 +1,6 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import torch
 from dash import Input, Output, State, callback, ctx
 from dash.exceptions import PreventUpdate
-
-model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-    device_map="auto"
-)
-model.eval()
-
-def get_llm_suggestions(prompt_text, max_new_tokens=100):
-    system_prompt = "<|system|>You are a helpful assistant.<|end|>"
-    user_prompt = f"<|user|>{prompt_text}<|end|><|assistant|>"
-
-    full_prompt = system_prompt + user_prompt
-
-    inputs = tokenizer(full_prompt, return_tensors="pt")
-    if torch.cuda.is_available() and model.device.type == "cuda":
-        inputs = {k: v.to("cuda") for k, v in inputs.items()}
-
-    with torch.no_grad():
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=max_new_tokens,
-            do_sample=True,
-            temperature=0.7
-        )
-
-    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    if "<|assistant|>" in response:
-        response = response.split("<|assistant|>")[-1]
-
-    return response.strip()
+from src.llm_utils import get_llm_suggestions
 
 @callback(
     Output("llm-suggestion-modal", "is_open", allow_duplicate=True),
