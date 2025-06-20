@@ -2,6 +2,7 @@ import base64
 import torch
 import clip
 import json
+import io
 import numpy as np
 
 from PIL import Image
@@ -21,6 +22,16 @@ def get_device():
 def encode_image_to_base64(image):
     encoded_image = base64.b64encode(image).decode()
     return f"data:image/png;base64,{encoded_image}"
+
+
+def image_to_base64_thumbnail(image_path, target_size=(64, 64)):
+    with Image.open(image_path) as img:
+        img = img.convert("RGB")
+        img.thumbnail(target_size)
+        buffered = io.BytesIO()
+        img.save(buffered, format="PNG", optimize=True)
+        encoded = base64.b64encode(buffered.getvalue()).decode()
+    return f"data:image/png;base64,{encoded}"
 
 
 def calculate_clip_embeddings(dataset):

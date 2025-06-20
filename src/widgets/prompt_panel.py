@@ -4,7 +4,6 @@ from dash import html, dcc
 def build_prompt_panel():
     return html.Div([
         dbc.Card([
-            dbc.CardHeader("Prompt Configuration", className="bg-light"),
             dbc.CardBody([
                 dbc.Label("Prompt"),
                 dbc.Textarea(id="Prompt", placeholder="Enter prompt", className="promp-field"),

@@ -73,12 +73,19 @@ textarea {
 }
 
 .cluster-field {
-  width: 512px;
-  height: 500px;
-  background-color: #f1f3f5;
-  border: 2px dashed #ccc;
+  width: 100%;
+  height: 512px;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.image-field {
+  width: 100%;
+  height: 512px;
+  background-color: transparent !important;
+  border: none !important;
   text-align: center;
-  line-height: 500px;
+  line-height: 512px;
   color: #666;
 }
 
@@ -94,7 +101,7 @@ textarea {
   padding: 10px;
   height: 100%;
   white-space: nowrap;
-  max-height: 750px;
+  max-height: 80vh;
 }
 
 .history-entry {

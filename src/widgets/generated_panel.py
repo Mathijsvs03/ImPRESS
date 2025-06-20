@@ -3,7 +3,6 @@ from dash import html, dcc
 
 def build_generated_panel():
     return dbc.Card([
-        dbc.CardHeader("Generated Image"),
         dbc.CardBody(
             dcc.Loading(
                 html.Img(id="gen-image", className="gen-image"),

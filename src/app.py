@@ -8,11 +8,13 @@ from src.widgets.prompt_panel import build_prompt_modal
 from src.widgets.input_panel import build_input_panel
 from src.widgets.view_panel import build_view_panel
 from src.widgets.history_panel import build_history_panel
+from src.widgets.scatterplot import create_scatterplot
 
+import src.callbacks.view
 import src.callbacks.generator
 import src.callbacks.history
-import src.callbacks.view
 import src.callbacks.llm_suggestion
+import src.callbacks.scatterplot
 
 os.environ['FLASK_ENV'] = 'development' # Auto-update style.css changes
 

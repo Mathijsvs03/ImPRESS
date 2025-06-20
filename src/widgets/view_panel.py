@@ -9,7 +9,7 @@ def build_view_panel():
         id="view-toggle",
         value="generated",
         children=[
-            dcc.Tab(build_generated_panel(), label="Generated Image", value="generated"),
+            dcc.Tab(build_generated_panel(), label="Selected Image", value="generated"),
             dcc.Tab(build_cluster_panel(), label="Clustered Images", value="cluster"),
         ],
         className="view-items"
