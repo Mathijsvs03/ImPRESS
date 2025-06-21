@@ -7,7 +7,7 @@ def build_prompt_panel():
             dbc.CardHeader("Prompt Configuration", className="bg-light"),
             dbc.CardBody([
                 dbc.Label("Prompt"),
-                dbc.Textarea(id="Prompt", placeholder="Enter prompt", className="promp-field"),
+                dbc.Textarea(id="Prompt", placeholder="Enter prompt", className="promp-field", style={"height": "150px", "width": "100%", "padding": "10px"}),
 
                 dbc.Label("Negative Prompt"),
                 dbc.Textarea(id="NegPrompt", placeholder="Enter negative prompt", className="prompt-field"),
