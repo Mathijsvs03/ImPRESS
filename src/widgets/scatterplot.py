@@ -26,7 +26,7 @@ def add_images_to_scatterplot(figure):
 
     zoom_scale_x = (max_x - min_x)
     zoom_scale_y = (max_y - min_y)
-    image_scale = 0.5
+    image_scale = 0.1
 
     if images_in_zoom:
         for x, y, image in images_in_zoom:
@@ -117,8 +117,7 @@ def create_scatterplot(projection):
                     'doubleClick': 'reset',
                 },
                 className="cluster-field"
-            ),
-            html.Div(id='scatterplot_selection', className='selection-info'),
+            )
         ])
     ])
 

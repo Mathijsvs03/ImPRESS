@@ -73,7 +73,7 @@ def filter_style_keywords(candidates, top_n=3):
     ]
 
     thinking_content, content = prompt_model(messages)
-    print("LLM Response Thinking:", thinking_content)
+    # print("LLM Response Thinking:", thinking_content)
     print("LLM Response Content:", content)
 
     # TODO - Improve regex to better capture style-related keywords

@@ -4,10 +4,22 @@ from keybert import KeyBERT
 
 from src.Dataset import Dataset
 from src.widgets import scatterplot
-from src.widgets.keyword_panel import build_keyword_panel
+from src.widgets.keyword_panel import build_keyword_content
 from src.llm_utils import filter_style_keywords
 
 kw_model = KeyBERT(model='all-MiniLM-L6-v2')
+
+@callback(
+    Output("scatterplot", "figure"),
+    Input("view-toggle", "value"),
+    prevent_initial_call=True
+)
+def reset_scatterplot(view):
+    if view == 'cluster':
+        return dash.no_update
+
+    return scatterplot.create_scatterplot_figure('UMAP')
+
 
 @callback(
     Output('scatterplot', 'figure', allow_duplicate=True),
@@ -26,13 +38,13 @@ def zoomed_scatterplot(figure, zoom_data):
 
 
 @callback(
-    Output('scatterplot_selection', 'children'),
+    Output('keyword-content', 'children'),
     Input('scatterplot', 'selectedData'),
     prevent_initial_call=True,
 )
 def on_selection_change(selected_data):
-    if not selected_data or 'points' not in selected_data:
-        return "No selection"
+    if not selected_data or "points" not in selected_data or len(selected_data["points"]) == 0:
+        return dash.no_update
 
     selected_points = selected_data['points']
     selected_indices = [point['pointIndex'] for point in selected_points]
@@ -55,7 +67,6 @@ def on_selection_change(selected_data):
 
     keyword_counts = Counter(all_keywords)
     candidate_keywords = [kw for kw, _ in keyword_counts.most_common(10)]
-
     style_keywords = filter_style_keywords(candidate_keywords, top_n=3)
 
-    return build_keyword_panel(style_keywords)
+    return build_keyword_content(style_keywords)
