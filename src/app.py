@@ -61,7 +61,7 @@ def run_ui(initial_history=None):
         ], className='gx-4 gy-2 col-container', align='start')
     ], className='main-container', fluid=True)
 
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=False, port=8059)
 
 
 def main():
