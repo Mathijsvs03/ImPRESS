@@ -21,7 +21,10 @@ def build_prompt_panel():
                 ),
 
                 dbc.Button("Generate Image", id="generate-image-button", color="primary", className="mt-3 me-2"),
-                dbc.Button("Generate Prompt", id="generate-prompt-button", color="secondary", className="mt-3"),
+                dbc.Button([
+                                html.Span("✨", style={"color": "white", "marginRight": "5px"}),
+                                "Generate Prompt"
+                            ], id="generate-prompt-button", color="secondary", className="mt-3"),
 
                 html.Hr(),
 
