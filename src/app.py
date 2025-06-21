@@ -4,14 +4,14 @@ import base64
 import os
 
 from src.Dataset import Dataset
-from src.widgets.prompt_panel import build_prompt_modal
 from src.widgets.history_panel import build_history_panel
+from src.widgets.keyword_panel import build_keyword_panel
+from src.widgets.prompt_panel import build_prompt_panel
 from src.widgets.scatterplot import create_scatterplot
 from src.widgets.image_display import create_image_display
 
 import src.callbacks.generator
 import src.callbacks.history
-import src.callbacks.switch_panels
 import src.callbacks.llm_suggestion
 import src.callbacks.scatterplot
 import src.callbacks.image_display
@@ -26,9 +26,10 @@ def run_ui(initial_history=None):
         suppress_callback_exceptions=True
     )
 
-    prompt_panel_container = html.Div(id="prompt-panel-container")
-    history_panel_widget = build_history_panel()
-    modal_container = html.Div(build_prompt_modal(), className='modal-container')
+    left_tab = dcc.Tabs([
+        dcc.Tab(label="Prompt", value="prompt", children=build_prompt_panel()),
+        dcc.Tab(label="Keywords", value="keyword", children=build_keyword_panel()),
+    ], id="input-togle", value="prompt")
 
     right_tab = dcc.Tabs([
         dcc.Tab(label="Generated Image", value="generated", children=create_image_display()),
@@ -43,10 +44,7 @@ def run_ui(initial_history=None):
         dbc.Row([
             # Left column in app view
             dbc.Col(
-                html.Div([
-                    prompt_panel_container,
-                    modal_container
-                ]),
+                left_tab,
                 className="h-100 d-flex flex-column left-col",
                 width=4
             ),
@@ -56,7 +54,7 @@ def run_ui(initial_history=None):
                 dbc.Stack([
                     right_tab,
                     html.Hr(),
-                    history_panel_widget
+                    build_history_panel()
                 ]),
                 width=8
             )
