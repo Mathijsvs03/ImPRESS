@@ -50,8 +50,8 @@ def prompt_model(messages, max_new_tokens=32768, thinking=True):
 
 def get_llm_suggestions(prompt_text, max_new_tokens=100):
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": prompt_text}
+        {"role": "system", "content": "Your role is to come up with a better prompt for the user to generate image. You will respond with the new improved prompt only."},
+        {"role": "user", "content": f"Based on the following prompt come up with one that is better suited for generating an image: {prompt_text}. Respond only with the newly improved prompt." }
     ]
 
     _, content = prompt_model(messages, max_new_tokens=max_new_tokens, thinking=False)
