@@ -18,13 +18,25 @@ def open_modal_immediately(n_clicks, prompt_value):
     Output("llm-suggestion-modal-body", "children", allow_duplicate=True),
     Input("llm-suggestion-modal", "is_open"),
     State("Prompt", "value"),
+    State("guidance-slider", "value"),
     prevent_initial_call=True
 )
-def update_llm_text(is_open, prompt_value):
+def update_llm_text(is_open, prompt_value, guidance_level):
     if not is_open or not prompt_value:
         raise PreventUpdate
+    
+    guidance_prompt_levels = {
+        1: "Make a very small improvement to the prompt. Keep it mostly unchanged.",
+        2: "Make minor enhancements to improve clarity and creativity.",
+        3: "Refactor the prompt moderately for better structure and more impact.",
+        4: "Significantly improve the prompt while preserving its core idea.",
+        5: "Completely rewrite the prompt to maximize creativity and effectiveness."
+    }
+
+    instruction = guidance_prompt_levels.get(guidance_level, "Improve this prompt.")
+
     try:
-        suggestion = get_llm_suggestions(prompt_value)
+        suggestion = get_llm_suggestions(prompt_value, improvement_instruction=instruction)
         return suggestion
     except Exception as e:
         return f"❌ Error: {str(e)}"
