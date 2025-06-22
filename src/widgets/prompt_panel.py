@@ -13,12 +13,16 @@ def build_prompt_panel():
                 dbc.Textarea(id="NegPrompt", placeholder="Enter negative prompt", className="prompt-field"),
 
                 dbc.Label("Guidance Scale"),
-                dcc.RangeSlider(
-                    0, 50, 1, value=[5, 15], allowCross=False,
-                    marks={i: str(i) for i in range(0, 51, 10)},
-                    tooltip={"placement": "bottom", "always_visible": True},
-                    id="guidance-slider"
+                dcc.Slider(
+                    id="guidance-slider",
+                    min=1,
+                    max=5,
+                    step=1,
+                    value=3,
+                    marks={i: str(i) for i in range(1, 6)},
+                    tooltip={"placement": "bottom", "always_visible": True}
                 ),
+
 
                 dbc.Button("Generate Image", id="generate-image-button", color="primary", className="mt-3 me-2"),
                 dbc.Button([
