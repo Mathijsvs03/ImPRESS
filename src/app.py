@@ -4,17 +4,22 @@ import base64
 import os
 
 from src.Dataset import Dataset
+<<<<<<< HEAD
+=======
+from src.widgets.prompt_panel import build_prompt_modal
+from src.widgets.input_panel import build_input_panel
+from src.widgets.view_panel import build_view_panel
+>>>>>>> style
 from src.widgets.history_panel import build_history_panel
 from src.widgets.keyword_panel import build_keyword_panel
 from src.widgets.prompt_panel import build_prompt_panel
 from src.widgets.scatterplot import create_scatterplot
-from src.widgets.image_display import create_image_display
 
+import src.callbacks.view
 import src.callbacks.generator
 import src.callbacks.history
 import src.callbacks.llm_suggestion
 import src.callbacks.scatterplot
-import src.callbacks.image_display
 
 os.environ['FLASK_ENV'] = 'development' # Auto-update style.css changes
 
@@ -26,6 +31,7 @@ def run_ui(initial_history=None):
         suppress_callback_exceptions=True
     )
 
+<<<<<<< HEAD
     left_tab = dcc.Tabs([
         dcc.Tab(label="Prompt", value="prompt", children=build_prompt_panel()),
         dcc.Tab(label="Keywords", value="keyword", children=build_keyword_panel()),
@@ -35,6 +41,10 @@ def run_ui(initial_history=None):
         dcc.Tab(label="Generated Image", value="generated", children=create_image_display()),
         dcc.Tab(label="Clustered View", value="cluster", children=create_scatterplot('UMAP'))
     ], id="view-toggle", value="generated")
+=======
+    input_panel_widget = build_input_panel()
+    view_panel_widget = build_view_panel()
+>>>>>>> style
 
     app.layout = dbc.Container([
         dcc.Store(id="history-store", data=initial_history),
@@ -44,18 +54,28 @@ def run_ui(initial_history=None):
         dbc.Row([
             # Left column in app view
             dbc.Col(
+<<<<<<< HEAD
                 left_tab,
+=======
+                input_panel_widget,
+>>>>>>> style
                 className="h-100 d-flex flex-column left-col",
                 width=4
             ),
 
             # Right column in app view
+<<<<<<< HEAD
             dbc.Col(
                 dbc.Stack([
                     right_tab,
                     html.Hr(),
                     build_history_panel()
                 ]),
+=======
+            dbc.Col([
+                view_panel_widget,
+                build_history_panel()],
+>>>>>>> style
                 width=8
             )
         ], className='gx-4 gy-2 col-container', align='start')

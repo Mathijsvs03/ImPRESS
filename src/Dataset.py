@@ -24,7 +24,9 @@ class Dataset:
 
         print("Loading dataset...")
         if not Dataset.files_exist():
+            print("Starting download")
             dataset = diffDB_loader.load()
+            print("loaded")
             with open(config.RUNTIME_CONFIG_PATH) as f:
                 Dataset.augmented_path = json.load(f).get('AUGMENTED_DATASET_PATH')
 

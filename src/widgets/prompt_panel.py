@@ -4,7 +4,6 @@ from dash import html, dcc
 def build_prompt_panel():
     return html.Div([
         dbc.Card([
-            dbc.CardHeader("Prompt Configuration", className="bg-light"),
             dbc.CardBody([
                 dbc.Label("Prompt"),
                 dbc.Textarea(id="Prompt", placeholder="Enter prompt", className="promp-field", style={"height": "150px", "width": "100%", "padding": "10px"}),
@@ -32,7 +31,11 @@ def build_prompt_panel():
 
                 html.Hr(),
 
+<<<<<<< HEAD
                 html.Div(build_prompt_modal(), className='modal-container')
+=======
+                html.Div(build_prompt_modal(), className='modal-container'),
+>>>>>>> style
             ])
         ], className="flex-grow-1 main-container"),
     ])
