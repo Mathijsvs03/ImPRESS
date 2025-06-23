@@ -31,11 +31,7 @@ def build_prompt_panel():
 
                 html.Hr(),
 
-<<<<<<< HEAD
                 html.Div(build_prompt_modal(), className='modal-container')
-=======
-                html.Div(build_prompt_modal(), className='modal-container'),
->>>>>>> style
             ])
         ], className="flex-grow-1 main-container"),
     ])

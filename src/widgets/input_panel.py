@@ -6,15 +6,12 @@ from src.widgets.keyword_panel import build_keyword_panel
 from src.widgets.history_panel import build_history_panel
 
 def build_input_panel():
-
-    keywords = ["Keyword 1", "Keyword 2", "Keyword 3"] # Temp keywords
-
     return dcc.Tabs(
         id="input-toggle",
         value="prompt",
         children=[
             dcc.Tab(build_prompt_panel(), label="Prompt", value="prompt"),
-            dcc.Tab(build_keyword_panel(keywords), label="Keywords", value="keyword")
+            dcc.Tab(build_keyword_panel(), label="Keywords", value="keyword")
             # dcc.Tab(build_history_panel(), label="History", value="history")
         ],
         className="view-items"

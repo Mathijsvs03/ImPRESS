@@ -19,7 +19,7 @@ pipe = StableDiffusionPipeline.from_pretrained(
 
 @callback(
     Output("history-store", "data"),
-    Output("selected-image", "data"),
+    Output("selected-image", "data", allow_duplicate=True),
     State("Prompt", "value"),
     State("NegPrompt", "value"),
     State("history-store", "data"),

@@ -13,7 +13,7 @@ def build_generated_panel():
                     ), width="auto"
                 ),
                 dbc.Col(
-                    html.P("Selected image generation prompt")
+                    html.P("Selected image generation prompt", id="selected-prompt")
                 )
             ])
         )
