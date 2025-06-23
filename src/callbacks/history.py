@@ -1,41 +1,38 @@
-from dash import html, callback, Output, Input, ALL, no_update, ctx
+from dash import html, callback, Output, Input, ALL, no_update, ctx, State
 import dash_bootstrap_components as dbc
 
-@callback(
-    Output("image-history", "children"),
-    Input("history-store", "data")
-)
-def update_history_display(history):
-    return [
-        dbc.Card([
-            dbc.Button([
-                html.Img(src=item["src"], className="history-image"),
-                html.H6(item["prompt"], className='mt-2 history-prompt')
-            ], id={'type': 'thumb', 'index': i}, n_clicks=0,
-                       className="hist-entry-button")
-        ], className="history-entry")
-        for i, item in enumerate(reversed(history))
-    ]
 
 @callback(
-    Output("selected-image", "data"),
-    Output("selected-prompt", "children"),
-    Input({"type": "thumb", "index": ALL}, "n_clicks"),
+    Output("history-wrapper", "children"),
     Input("history-store", "data"),
-    prevent_initial_call=True
+    Input("selected-image", "data"),
 )
-def history_clicked(n_clicks_list, history):
-    triggered = ctx.triggered_id
+def update_history_display(history, selected_src):
+    if not history:
+        return html.Div([], id="image-history", className="history-panel")
 
-    if triggered is None:
-        return no_update
-    elif triggered == "history-store":
-        item = list(history)[-1]
-    else:
-        clicked_index = triggered["index"]
+    cards = []
+    for item in reversed(history):
+        is_selected = item["src"] == selected_src
+        cards.append(
+            dbc.Card(
+                [
+                  dbc.Button(
+                    html.Img(src=item["src"], className="history-image"),
+                    id={'type':'thumb','index':item["id"]},
+                    n_clicks=0,
+                    className="hist-entry-button"
+                  ),
+                  dbc.Tooltip(
+                    item["prompt"],
+                    target={'type':'thumb','index':item["id"]},
+                    placement="bottom",
+                    style={"whiteSpace":"normal","textAlign":"left"}
+                  )
+                ],
+                id={'type':'card','index':item["id"]},
+                className=f"history-entry{' selected-history-entry' if is_selected else ''}"
+            )
+        )
 
-        history_reversed = list(reversed(history))
-
-        item = history_reversed[clicked_index]
-
-    return item["src"], item["prompt"]
+    return html.Div(cards, id="image-history", className="history-panel")
