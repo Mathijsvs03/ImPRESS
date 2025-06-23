@@ -9,16 +9,16 @@ from src.llm_utils import filter_style_keywords
 
 kw_model = KeyBERT(model='all-MiniLM-L6-v2')
 
-@callback(
-    Output("scatterplot", "figure"),
-    Input("view-toggle", "value"),
-    prevent_initial_call=True
-)
-def reset_scatterplot(view):
-    if view == 'cluster':
-        return dash.no_update
+# @callback(
+#     Output("scatterplot", "figure"),
+#     Input("view-toggle", "value"),
+#     prevent_initial_call=True
+# )
+# def reset_scatterplot(view):
+#     if view == 'cluster':
+#         return dash.no_update
 
-    return scatterplot.create_scatterplot_figure('UMAP')
+#     return scatterplot.create_scatterplot_figure('UMAP')
 
 
 @callback(
@@ -47,11 +47,10 @@ def on_selection_change(selected_data):
         return dash.no_update
 
     selected_points = selected_data['points']
-    selected_indices = [point['pointIndex'] for point in selected_points]
 
-    dataset = Dataset.get_data()['train']
-    selected_rows = dataset.select(selected_indices)
-    prompts = selected_rows['prompt']
+    prompts = []
+    for point in selected_points:
+            prompts.append(point['text'])
 
     all_keywords = []
     for prompt in prompts:
@@ -79,19 +78,22 @@ def on_selection_change(selected_data):
 )
 def highlight_selected_image(selected_image, figure):
     if not selected_image:
-        return dash.no_update
+        figure['data'][0]['marker']['color'] = 'rgba(31, 119, 180, 0.5)'
+        return figure
 
     projection_coords = selected_image.get('projection_coords', None)
     if not projection_coords:
-        return dash.no_update
+        figure['data'][0]['marker']['color'] = 'rgba(31, 119, 180, 0.5)'
+        return figure
 
-    x, y = projection_coords['umap_x'], projection_coords['umap_y']
-    figure['data'][2] = dict(
-        x=[x],
-        y=[y],
-        mode="markers",
-        name='selected class',
-        marker=dict(size=7, color="red", symbol='circle'),
-    )
+    sel_x, sel_y = projection_coords['umap_x'], projection_coords['umap_y']
+    x_vals, y_vals = figure['data'][0]['x'], figure['data'][0]['y']
 
+    colors = [
+        'red' if abs(x - sel_x) < 1e-6 and abs(y - sel_y) < 1e-6
+        else 'rgba(31, 119, 180, 0.5)'
+        for x, y in zip(x_vals, y_vals)
+    ]
+
+    figure['data'][0]['marker']['color'] = colors
     return figure

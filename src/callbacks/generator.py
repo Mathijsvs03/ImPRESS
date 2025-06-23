@@ -63,6 +63,7 @@ def generate_image_from_prompt(prompt: str, negative_prompt: str, history: list,
     figure['data'][0]['x'].append(x)
     figure['data'][0]['y'].append(y)
     figure['data'][0]['customdata'].append(source)
+    figure['data'][0]['text'].append(prompt)
 
     # Create the data entry for selected image
     data = {"src": source, "prompt": prompt, "projection_coords": projection}

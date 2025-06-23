@@ -69,6 +69,7 @@ def create_scatterplot_figure(projection):
 
     fig.update_traces(
         customdata=Dataset.get_data()['train']['image'],
+        text=Dataset.get_data()['train']['prompt'],
         marker={'color': 'rgba(31, 119, 180, 0.5)', 'size': 4},
         unselected_marker_opacity=0.60,
         hovertemplate=None,
