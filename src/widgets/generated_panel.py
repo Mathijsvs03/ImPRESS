@@ -6,11 +6,9 @@ def build_generated_panel():
         dbc.CardBody(
             dbc.Row([
                 dbc.Col(
-                    dcc.Loading(
-                        html.Img(id="gen-image", className="gen-image",
+                    html.Img(id="gen-image", className="gen-image",
                                 alt="Selected image"),
-                        type="circle"
-                    ), width="auto"
+                    width="auto"
                 ),
                 dbc.Col(
                     html.P("Selected image generation prompt", id="selected-prompt")

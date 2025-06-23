@@ -4,13 +4,11 @@ import base64
 import os
 
 from src.Dataset import Dataset
-from src.widgets.prompt_panel import build_prompt_modal
+from src.llm_utils import get_llm_model
+from src.utils import get_projector_models
 from src.widgets.input_panel import build_input_panel
 from src.widgets.view_panel import build_view_panel
 from src.widgets.history_panel import build_history_panel
-from src.widgets.keyword_panel import build_keyword_panel
-from src.widgets.prompt_panel import build_prompt_panel
-from src.widgets.scatterplot import create_scatterplot
 
 import src.callbacks.view
 import src.callbacks.generator
@@ -33,7 +31,7 @@ def run_ui(initial_history=None):
 
     app.layout = dbc.Container([
         dcc.Store(id="history-store", data=initial_history),
-        dcc.Store(id="selected-image", data=initial_history[0]["src"] if initial_history else ""),
+        dcc.Store(id="selected-image", data=initial_history[0] if initial_history else ""),
         html.H1('ImPress', className='header-title'),
 
         dbc.Row([
@@ -53,11 +51,13 @@ def run_ui(initial_history=None):
         ], className='gx-4 gy-2 col-container', align='start')
     ], className='main-container', fluid=True)
 
-    app.run(debug=True, use_reloader=False, port=8059)
+    app.run(debug=True, use_reloader=False, port=8050)
 
 
 def main():
     Dataset.load()
+    get_llm_model()
+    get_projector_models()
 
     folder = "src/assets/templates"
     template_history = []
