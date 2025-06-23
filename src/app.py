@@ -4,6 +4,8 @@ import base64
 import os
 
 from src.Dataset import Dataset
+from src.llm_utils import get_llm_model
+from src.utils import get_projector_models
 from src.widgets.history_panel import build_history_panel
 from src.widgets.keyword_panel import build_keyword_panel
 from src.widgets.prompt_panel import build_prompt_panel
@@ -38,7 +40,7 @@ def run_ui(initial_history=None):
 
     app.layout = dbc.Container([
         dcc.Store(id="history-store", data=initial_history),
-        dcc.Store(id="selected-image", data=initial_history[0]["src"] if initial_history else ""),
+        dcc.Store(id="selected-image", data=initial_history[0] if initial_history else ""),
         html.H1('ImPress', className='header-title'),
 
         dbc.Row([
@@ -66,6 +68,8 @@ def run_ui(initial_history=None):
 
 def main():
     Dataset.load()
+    get_llm_model()
+    get_projector_models()
 
     folder = "src/assets/templates"
     template_history = []

@@ -3,14 +3,20 @@ import torch
 import clip
 import json
 import io
+import joblib
 import numpy as np
 
+from pathlib import Path
 from PIL import Image
 from datasets import DatasetDict, Value
 from tqdm import tqdm
 from umap import UMAP
 from sklearn.manifold import TSNE
 from src import config
+
+
+_umap_model = None
+_tsne_model = None
 
 def get_device():
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -19,18 +25,40 @@ def get_device():
     return device
 
 
+def get_projector_models():
+    global _umap_model, _tsne_model
+    if _umap_model is None:
+        u_path = Path(config.MODEL_DIR) / 'umap_model.pkl'
+        if not u_path.exists():
+            raise FileNotFoundError(f"UMAP model not found at {u_path}.")
+        _umap_model = joblib.load(u_path)
+    if _tsne_model is None:
+        t_path = Path(config.MODEL_DIR) / 'tsne_model.pkl'
+        if not t_path.exists():
+            raise FileNotFoundError(f"t-SNE model not found at {t_path}.")
+        _tsne_model = joblib.load(t_path)
+
+    return _umap_model, _tsne_model
+
+
+def decode_base64_to_image(base64_string):
+    if not base64_string.startswith("data:image/png;base64,"):
+        raise ValueError("Base64 string does not start with 'data:image/png;base64,'")
+    base64_string = base64_string.replace("data:image/png;base64,", "")
+    image_data = base64.b64decode(base64_string)
+    return Image.open(io.BytesIO(image_data)).convert("RGB")
+
+
 def encode_image_to_base64(image):
     encoded_image = base64.b64encode(image).decode()
     return f"data:image/png;base64,{encoded_image}"
 
 
-def image_to_base64_thumbnail(image_path, target_size=(64, 64)):
-    with Image.open(image_path) as img:
-        img = img.convert("RGB")
-        img.thumbnail(target_size)
-        buffered = io.BytesIO()
-        img.save(buffered, format="PNG", optimize=True)
-        encoded = base64.b64encode(buffered.getvalue()).decode()
+def image_to_base64_thumbnail(img, target_size=(64, 64)):
+    img.thumbnail(target_size)
+    buffered = io.BytesIO()
+    img.save(buffered, format="PNG", optimize=True)
+    encoded = base64.b64encode(buffered.getvalue()).decode()
     return f"data:image/png;base64,{encoded}"
 
 
@@ -62,6 +90,11 @@ def calculate_clip_embeddings(dataset):
 def calculate_umap(clip_embeddings, n_components=2, n_neighbors=15, min_dist=0.1, metric='cosine'):
     umap_model = UMAP(n_components=n_components, n_neighbors=n_neighbors, min_dist=min_dist, metric=metric)
     umap_embeddings = umap_model.fit_transform(clip_embeddings)
+    path = Path(config.MODEL_DIR) / 'umap_model.pkl'
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+    joblib.dump(umap_model, path)
     umap_x, umap_y = umap_embeddings[:, 0], umap_embeddings[:, 1]
     return umap_x, umap_y
 
@@ -69,8 +102,32 @@ def calculate_umap(clip_embeddings, n_components=2, n_neighbors=15, min_dist=0.1
 def calculate_tsne(clip_embeddings, n_components=2, perplexity=30, random_state=42):
     tsne_model = TSNE(n_components=n_components, perplexity=perplexity, random_state=random_state)
     tsne_embeddings = tsne_model.fit_transform(clip_embeddings)
+    path = Path(config.MODEL_DIR) / 'tsne_model.pkl'
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+    joblib.dump(tsne_model, path)
     tsne_x, tsne_y = tsne_embeddings[:, 0], tsne_embeddings[:, 1]
     return tsne_x, tsne_y
+
+
+def project_data_point(image_data, prompt_data):
+    clip_emb = calculate_clip_embeddings({'image': [image_data], 'prompt': [prompt_data]})
+
+    umap_model, tsne_model = get_projector_models()
+
+    umap_embedding = umap_model.transform(clip_emb)
+    umap_x, umap_y = umap_embedding[:, 0], umap_embedding[:, 1]
+    umap_x, umap_y = umap_x.tolist(), umap_y.tolist()
+    tsne_x, tsne_y = [None], [None] # t-SNE is not used in this function
+
+
+    return {
+        'umap_x': umap_x[0],
+        'umap_y': umap_y[0],
+        'tsne_x': tsne_x[0],
+        'tsne_y': tsne_y[0],
+    }
 
 
 def generate_projections(dataset=None):
