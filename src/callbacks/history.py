@@ -1,4 +1,4 @@
-from dash import html, callback, Output, Input, ALL, no_update, ctx
+from dash import html, callback, Output, Input, ALL, dash, ctx
 import dash_bootstrap_components as dbc
 
 @callback(
@@ -19,7 +19,6 @@ def update_history_display(history):
 
 @callback(
     Output("selected-image", "data"),
-    Output("selected-prompt", "children"),
     Input({"type": "thumb", "index": ALL}, "n_clicks"),
     Input("history-store", "data"),
     prevent_initial_call=True
@@ -28,14 +27,12 @@ def history_clicked(n_clicks_list, history):
     triggered = ctx.triggered_id
 
     if triggered is None:
-        return no_update
+        return dash.no_update
     elif triggered == "history-store":
-        item = list(history)[-1]
-    else:
+        item = history[-1]
+    elif isinstance(triggered, dict) and triggered.get("type") == "thumb":
         clicked_index = triggered["index"]
-
         history_reversed = list(reversed(history))
-
         item = history_reversed[clicked_index]
 
-    return item["src"], item["prompt"]
+    return item

@@ -21,30 +21,20 @@ pipe = StableDiffusionPipeline.from_pretrained(
 
 @callback(
     Output("history-store", "data"),
-    Output("selected-image", "data", allow_duplicate=True),
     Output("scatterplot", "figure", allow_duplicate=True),
     State("Prompt", "value"),
     State("NegPrompt", "value"),
     State("history-store", "data"),
     State("scatterplot", "figure"),
     Input("generate-image-button", "n_clicks"),
-    Input({'type': 'thumb', 'index': ALL}, 'n_clicks'),
     prevent_initial_call=True
 )
 
 
-def generate_image_from_prompt(prompt: str, negative_prompt: str, history: list, figure, n_clicks: int, thumb_clicks: list):
-    triggered_id = ctx.triggered_id
-
-    if isinstance(triggered_id, dict) and triggered_id.get("type") == "thumb":
-        print('Image thumbnail clicked, updating selected image')
-        index = triggered_id["index"]
-        selected = list(reversed(history))[index]
-        return dash.no_update, selected, dash.no_update
-
+def generate_image_from_prompt(prompt: str, negative_prompt: str, history: list, figure, n_clicks: int):
     if not prompt:
         print('No prompt provided, skipping image generation')
-        return dash.no_update, dash.no_update, dash.no_update
+        return dash.no_update, dash.no_update
 
     print('Waiting to acquire lock on model to generate image')
     steps = 50 # Can be adjusted to be controlled through UI (need to add in callback)
@@ -56,13 +46,8 @@ def generate_image_from_prompt(prompt: str, negative_prompt: str, history: list,
             num_images_per_prompt=1
         ).images[0]
 
-    # Resize and save the generated image
+    # Resize the generated image
     image = image.resize(config.GENERATED_IMAGE_SIZE)
-    image_path = Path(config.GENERATED_IMAGE_DIR) / f'gen_{uuid.uuid4().hex}.png'
-    if not image_path.parent.exists():
-        image_path.parent.mkdir(parents=True, exist_ok=True)
-    image.save(image_path)
-
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     source = utils.encode_image_to_base64(buffer.getvalue())
@@ -82,4 +67,4 @@ def generate_image_from_prompt(prompt: str, negative_prompt: str, history: list,
     # Create the data entry for selected image
     data = {"src": source, "prompt": prompt, "projection_coords": projection}
     history.append(data)
-    return history, data, figure
+    return history, figure
