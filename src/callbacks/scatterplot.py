@@ -70,3 +70,28 @@ def on_selection_change(selected_data):
     style_keywords = filter_style_keywords(candidate_keywords, top_n=3)
 
     return build_keyword_content(style_keywords)
+
+@callback(
+    Output('scatterplot', 'figure', allow_duplicate=True),
+    Input('selected-image', 'data'),
+    State('scatterplot', 'figure'),
+    prevent_initial_call=True,
+)
+def highlight_selected_image(selected_image, figure):
+    if not selected_image:
+        return dash.no_update
+
+    projection_coords = selected_image.get('projection_coords', None)
+    if not projection_coords:
+        return dash.no_update
+
+    x, y = projection_coords['umap_x'], projection_coords['umap_y']
+    figure['data'][2] = dict(
+        x=[x],
+        y=[y],
+        mode="markers",
+        name='selected class',
+        marker=dict(size=7, color="red", symbol='circle'),
+    )
+
+    return figure

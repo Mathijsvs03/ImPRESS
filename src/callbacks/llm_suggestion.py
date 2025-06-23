@@ -24,7 +24,7 @@ def open_modal_immediately(n_clicks, prompt_value):
 def update_llm_text(is_open, prompt_value, guidance_level):
     if not is_open or not prompt_value:
         raise PreventUpdate
-    
+
     guidance_prompt_levels = {
         1: "Make a very small improvement to the prompt. Keep it mostly unchanged.",
         2: "Make minor enhancements to improve clarity and creativity.",

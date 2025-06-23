@@ -1,5 +1,4 @@
-import dash_bootstrap_components as dbc
-from dash import html, dcc
+from dash import dcc
 
 from src.widgets.generated_panel import build_generated_panel
 from src.widgets.cluster_panel import build_cluster_panel

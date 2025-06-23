@@ -3,7 +3,6 @@ from dash import html, dcc
 
 from src.widgets.prompt_panel import build_prompt_panel
 from src.widgets.keyword_panel import build_keyword_panel
-from src.widgets.history_panel import build_history_panel
 
 def build_input_panel():
     return dcc.Tabs(
@@ -12,7 +11,6 @@ def build_input_panel():
         children=[
             dcc.Tab(build_prompt_panel(), label="Prompt", value="prompt"),
             dcc.Tab(build_keyword_panel(), label="Keywords", value="keyword")
-            # dcc.Tab(build_history_panel(), label="History", value="history")
         ],
         className="view-items"
     )

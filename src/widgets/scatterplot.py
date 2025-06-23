@@ -1,5 +1,5 @@
 from PIL import Image
-from dash import dcc, html
+from dash import dcc
 import plotly.express as px
 from src.Dataset import Dataset
 from src import config, utils
@@ -30,6 +30,11 @@ def add_images_to_scatterplot(figure):
 
     if images_in_zoom:
         for x, y, image in images_in_zoom:
+            if isinstance(image, str) and image.startswith("data:image/png;base64,"):
+                image = utils.decode_base64_to_image(image)
+            else:
+                image = Image.open(image).convert("RGB")
+
             image_src = utils.image_to_base64_thumbnail(image, target_size=(64, 64))
             figure['layout']['images'].append(dict(
                 x=x,
@@ -67,7 +72,7 @@ def create_scatterplot_figure(projection):
         marker={'color': 'rgba(31, 119, 180, 0.5)', 'size': 4},
         unselected_marker_opacity=0.60,
         hovertemplate=None,
-        hoverinfo='skip',
+        hoverinfo='none',
     )
     fig.update_layout(dragmode='select')
     fig.update_xaxes(titlefont=dict(size=12), tickfont=dict(size=10))
@@ -120,13 +125,3 @@ def create_scatterplot(projection):
             )
         ])
     ])
-
-
-# Not in use yet, but useful for selection callbacks
-def get_selected_data(selected_data):
-    dataset = Dataset.get_data()['train']
-    if selected_data and "points" in selected_data:
-        selected_indices = [pt["pointIndex"] for pt in selected_data["points"]]
-        return dataset.select(selected_indices)
-    else:
-        return dataset

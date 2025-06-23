@@ -1,7 +1,8 @@
 import threading
 from io import BytesIO
-import uuid
+from pathlib import Path
 
+import uuid
 import torch
 import dash
 from dash import Input, Output, callback, State, ALL, ctx
@@ -21,12 +22,12 @@ pipe = StableDiffusionPipeline.from_pretrained(
 
 @callback(
     Output("history-store", "data"),
-    Output("selected-image", "data", allow_duplicate=True),
+    Output("scatterplot", "figure", allow_duplicate=True),
     Output("selected-prompt", "children", allow_duplicate=True),
     State("Prompt", "value"),
     State("history-store", "data"),
+    State("scatterplot", "figure"),
     Input("generate-image-button", "n_clicks"),
-    Input({'type': 'thumb', 'index': ALL}, 'n_clicks'),
     prevent_initial_call=True
 )
 def generate_image_from_prompt(prompt: str, history: list, n_clicks: int, thumb_clicks: list):
@@ -54,16 +55,25 @@ def generate_image_from_prompt(prompt: str, history: list, n_clicks: int, thumb_
             num_images_per_prompt=1
         ).images[0]
 
+    # Resize the generated image
     image = image.resize(config.GENERATED_IMAGE_SIZE)
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     source = utils.encode_image_to_base64(buffer.getvalue())
 
-    new_entry = {
-        "id": str(uuid.uuid4()),
-        "src": source,
-        "prompt": prompt
-    }
-    history.append(new_entry)
+    # Get projection coordinates for the generated image
+    projection = utils.project_data_point(
+        image_data={"path": buffer, "image": image},
+        prompt_data=prompt
+    )
 
-    return history, source, prompt
+    # Update the figure with the new image data
+    x, y = projection['umap_x'], projection['umap_y']
+    figure['data'][0]['x'].append(x)
+    figure['data'][0]['y'].append(y)
+    figure['data'][0]['customdata'].append(source)
+
+    # Create the data entry for selected image
+    data = {"src": source, "prompt": prompt, "projection_coords": projection, "id": str(uuid.uuid4())}
+    history.append(data)
+    return history, figure, source

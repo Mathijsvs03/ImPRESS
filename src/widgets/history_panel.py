@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html, dcc
+from dash import html
 
 def build_history_panel():
     return dbc.Card([
