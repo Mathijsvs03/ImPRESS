@@ -9,16 +9,19 @@ from src.llm_utils import filter_style_keywords
 
 kw_model = KeyBERT(model='all-MiniLM-L6-v2')
 
-# @callback(
-#     Output("scatterplot", "figure"),
-#     Input("view-toggle", "value"),
-#     prevent_initial_call=True
-# )
-# def reset_scatterplot(view):
-#     if view == 'cluster':
-#         return dash.no_update
+@callback(
+    Output("scatterplot", "figure"),
+    Input("view-toggle", "value"),
+    State("scatterplot", "figure"),
+    prevent_initial_call=True
+)
+def reset_scatterplot(view, figure):
+    if view == 'cluster':
+        return dash.no_update
 
-#     return scatterplot.create_scatterplot_figure('UMAP')
+    figure["layout"]["xaxis"]["autorange"] = True
+    figure["layout"]["yaxis"]["autorange"] = True
+    return figure
 
 
 @callback(
