@@ -43,8 +43,9 @@ def run_ui(initial_history=None):
             ),
 
             # Right column in app view
-            dbc.Col(
+            dbc.Col([
                 view_panel_widget,
+                build_history_panel()],
                 width=8
             )
         ], className='gx-4 gy-2 col-container', align='start')

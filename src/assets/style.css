@@ -90,18 +90,17 @@ textarea {
 }
 
 .gen-image {
-  max-width: 1024px;
-  max-height: 768px;
+  max-width: 512px;
+  max-height: 512px;
 }
 
 .history-panel {
   display: flex;
-  flex-direction: column;
-  overflow-y: auto;
+  flex-direction: row;
+  overflow-x: auto;
   padding: 10px;
   height: 100%;
   white-space: nowrap;
-  max-height: 80vh;
 }
 
 .history-entry {
