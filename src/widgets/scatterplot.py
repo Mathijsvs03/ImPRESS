@@ -1,5 +1,5 @@
 from PIL import Image
-from dash import dcc, html
+from dash import dcc
 import plotly.express as px
 from src.Dataset import Dataset
 from src import config, utils
