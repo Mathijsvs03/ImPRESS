@@ -32,7 +32,7 @@ def run_ui(initial_history=None):
 
     app.layout = dbc.Container([
         dcc.Store(id="history-store", data=initial_history or []),
-        dcc.Store(id="selected-image", data=(initial_history[0]["src"] if initial_history else "")),
+        dcc.Store(id="selected-image", data=(initial_history[0] if initial_history else "")),
         html.H1('ImPress', className='header-title'),
 
         dbc.Row([

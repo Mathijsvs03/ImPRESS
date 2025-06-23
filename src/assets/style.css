@@ -173,3 +173,10 @@ textarea {
     white-space: pre-wrap;
     font-size: 16px;
 }
+
+.placeholder-text {
+    font-size: 1.4rem;
+    color: #888;
+    text-align: center;
+    margin-top: 180px;
+}

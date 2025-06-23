@@ -7,7 +7,7 @@ def build_generated_panel():
             dbc.Row([
                 dbc.Col(
                     dcc.Loading(
-                        html.Img(id="gen-image", className="gen-image", alt="Selected image"),
+                        html.Div(id="generated-content"),
                         type="circle"
                     ),
                     width=6,
@@ -26,7 +26,7 @@ def build_generated_panel():
                                 "cursor": "pointer"
                             }
                         ),
-                       html.Div(
+                        html.Div(
                             html.P(id="selected-prompt", className="prompt-text"),
                             className="prompt-box"
                         )
@@ -34,7 +34,6 @@ def build_generated_panel():
                 ],
                 width=6,
                 style={"borderLeft": "2px solid #ccc", "paddingLeft": "20px"})
-
             ]),
             style={"height": "550px"}
         )

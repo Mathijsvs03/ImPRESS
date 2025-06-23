@@ -19,34 +19,37 @@ pipe = StableDiffusionPipeline.from_pretrained(
     torch_dtype=torch.float16
 ).to(device)
 
-
 @callback(
     Output("history-store", "data"),
-    Output("scatterplot", "figure", allow_duplicate=True),
+    Output("selected-image", "data", allow_duplicate=True),
     Output("selected-prompt", "children", allow_duplicate=True),
+    Output("scatterplot", "figure", allow_duplicate=True),
     State("Prompt", "value"),
     State("history-store", "data"),
     State("scatterplot", "figure"),
     Input("generate-image-button", "n_clicks"),
+    Input({"type": "thumb", "index": ALL}, "n_clicks"),
     prevent_initial_call=True
 )
-def generate_image_from_prompt(prompt: str, history: list, n_clicks: int, thumb_clicks: list):
+def generate_image_from_prompt(prompt: str, history: list, figure, n_clicks: int, thumb_clicks: list):
     triggered_id = ctx.triggered_id
 
+    # Handle history thumbnail selection
     if isinstance(triggered_id, dict) and triggered_id.get("type") == "thumb":
         print('Image thumbnail clicked, updating selected image')
         clicked_id = triggered_id["index"]
         selected = next((item for item in reversed(history) if item["id"] == clicked_id), None)
         if selected is None:
-            return dash.no_update, dash.no_update, dash.no_update
-        return dash.no_update, selected["src"], selected["prompt"]
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update
+        return dash.no_update, selected, selected["prompt"], dash.no_update
 
+    # Handle empty prompt
     if not prompt:
         print('No prompt provided, skipping image generation')
-        return dash.no_update, dash.no_update, dash.no_update
+        return dash.no_update, dash.no_update, dash.no_update, dash.no_update
 
     print('Waiting to acquire lock on model to generate image')
-    steps = 50 
+    steps = 50  # Can be made configurable if needed
 
     with pipe_lock:
         image = pipe(
@@ -55,7 +58,7 @@ def generate_image_from_prompt(prompt: str, history: list, n_clicks: int, thumb_
             num_images_per_prompt=1
         ).images[0]
 
-    # Resize the generated image
+    # Resize and encode image
     image = image.resize(config.GENERATED_IMAGE_SIZE)
     buffer = BytesIO()
     image.save(buffer, format="PNG")
@@ -67,13 +70,19 @@ def generate_image_from_prompt(prompt: str, history: list, n_clicks: int, thumb_
         prompt_data=prompt
     )
 
-    # Update the figure with the new image data
+    # Update figure with new point
     x, y = projection['umap_x'], projection['umap_y']
     figure['data'][0]['x'].append(x)
     figure['data'][0]['y'].append(y)
     figure['data'][0]['customdata'].append(source)
 
-    # Create the data entry for selected image
-    data = {"src": source, "prompt": prompt, "projection_coords": projection, "id": str(uuid.uuid4())}
+    # Store full data for selection
+    data = {
+        "src": source,
+        "prompt": prompt,
+        "projection_coords": projection,
+        "id": str(uuid.uuid4())
+    }
     history.append(data)
-    return history, figure, source
+
+    return history, data, prompt, figure
