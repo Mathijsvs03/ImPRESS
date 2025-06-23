@@ -57,7 +57,7 @@ textarea {
 }
 
 .view-container {
-  height: 500px;
+  height: 100%;
 }
 
 .view-items {
@@ -69,7 +69,7 @@ textarea {
   width: 100%;
   padding: 10px;
   overflow-y: auto;
-  max-height: 400px;
+  /* max-height: 400px; */
 }
 
 .cluster-field {
@@ -120,7 +120,10 @@ textarea {
 }
 
 .history-image {
-  height: 150px;
   width: 100%;
   object-fit: cover;
+}
+
+.history-prompt {
+  color: #000;
 }
