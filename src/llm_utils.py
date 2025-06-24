@@ -1,4 +1,5 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
+import re
 
 _model = None
 _tokenizer = None
@@ -68,24 +69,50 @@ def get_llm_suggestions(prompt_text, improvement_instruction=None, max_new_token
     return content
 
 
-def filter_style_keywords(candidates, top_n=3):
-    prompt = (
-        f"From the following keywords: [{', '.join(candidates)}], "
-        f"return only those that describe the *style* or *aesthetic* of images, not objects or scenes. "
-        f"Respond with a comma-separated list of the top {top_n} most representative style keywords from this list."
-    )
-    print("Input to LLM:", prompt)
+def filter_style_keywords(candidates, top_n=10):
+    example_keywords = ["desert", "sunset", "camel", "dunes"]
+
+    example_prompt = f"""
+    I have the following list of keywords that were extracted from user prompts intended for image generation:
+    - {', '.join(example_keywords)}
+
+    Your task is to analyze these keywords and return a new list of words that relate to:
+    *style*, *aesthetic*, *mood*, *genre*, or any other visually relevant concept implied or suggested by the input.
+    These new keywords should help inspire or enrich future image generation prompts, enforcing diversity.
+    Focus on: Artistic styles (e.g., minimalism, surrealism, vaporwave), Moods and atmosphere (e.g., serene, eerie, chaotic),
+    Visual characteristics (e.g., high contrast, muted colors, soft lighting), Cultural or conceptual associations (e.g., cyberpunk, baroque, post-apocalyptic).
+    Avoid: Repeating the input keywords exactly, and listing generic or overly broad terms (e.g., "image", "art").
+    Only return the most relevant keywords, separated by commas, without any additional text or explanation.
+    """
+
+    example_response = "warm tones, golden hour lighting, sparse landscape, nomadic aesthetic, windswept textures, earthy palette"
+
+    keyword_prompt = f"""
+    I have the following list of keywords that were extracted from user prompts intended for image generation:
+    - {', '.join(candidates)}
+
+    Your task is to analyze these keywords and return a new list of words that relate to:
+    *style*, *aesthetic*, *mood*, *genre*, or any other visually relevant concept implied or suggested by the input.
+    These new keywords should help inspire or enrich future image generation prompts.
+    Focus on: Artistic styles (e.g., minimalism, surrealism, vaporwave), Moods and atmosphere (e.g., serene, eerie, chaotic),
+    Visual characteristics (e.g., high contrast, muted colors, soft lighting), Cultural or conceptual associations (e.g., cyberpunk, baroque, post-apocalyptic).
+    Avoid: Repeating the input keywords exactly, and listing generic or overly broad terms (e.g., "image", "art").
+    Only return the {top_n} most relevant keywords, separated by commas, without any additional text or explanation.
+    """
 
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": prompt}
+        {"role": "user", "content": example_prompt},
+        {"role": "assistant", "content": example_response},
+        {"role": "user", "content": keyword_prompt}
     ]
 
-    thinking_content, content = prompt_model(messages)
-    # print("LLM Response Thinking:", thinking_content)
+    _, content = prompt_model(messages, max_new_tokens=50, thinking=False)
     print("LLM Response Content:", content)
 
-    # TODO - Improve regex to better capture style-related keywords
-    import re
-    keywords = re.findall(r'\b[a-zA-Z][a-zA-Z ]{2,}\b', content)
+    try:
+        keywords = re.findall(r'\b[a-zA-Z][a-zA-Z ]{2,}\b', content)
+    except Exception as e:
+        print(f"Keyword parsing failed: {e}")
+        keywords = []
+
     return list(dict.fromkeys(keywords))[:top_n]

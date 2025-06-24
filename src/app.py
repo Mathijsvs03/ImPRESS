@@ -31,6 +31,7 @@ def run_ui(initial_history=None):
     view_panel_widget = build_view_panel()
 
     app.layout = dbc.Container([
+        dcc.Store(id='stored-selection', data=None),
         dcc.Store(id="history-store", data=initial_history or []),
         dcc.Store(id="selected-image", data=(initial_history[0] if initial_history else "")),
         html.H1('ImPress', className='header-title'),
