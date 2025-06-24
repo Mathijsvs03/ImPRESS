@@ -58,11 +58,13 @@ def generate_image_from_prompt(prompt, history, figure, gen_clicks, thumb_clicks
         image_data={"path": buf, "image": image},
         prompt_data=prompt
     )
-    x, y = proj["umap_x"], proj["umap_y"]
-    figure["data"][0]["x"].append(x)
-    figure["data"][0]["y"].append(y)
-    figure["data"][0]["customdata"].append(src64)
 
+    # Update figure with new point
+    x, y = projection['umap_x'], projection['umap_y']
+    figure['data'][0]['x'].append(x)
+    figure['data'][0]['y'].append(y)
+    figure['data'][0]['customdata'].append(source)
+    figure['data'][0]['text'].append(prompt)
 
     entry = {
         "src":               src64,
