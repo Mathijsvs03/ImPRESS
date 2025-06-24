@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html
+from dash import html, dcc
 
 def build_keyword_content(keywords=None):
     if not keywords:
@@ -14,6 +14,15 @@ def build_keyword_content(keywords=None):
 def build_keyword_panel():
     return dbc.Card([
         dbc.CardBody([
-            html.Div(id='keyword-content', children=build_keyword_content())
+            dcc.Loading(
+                id="loading-keywords",
+                type="default",  # Or "circle", "dot", "graph"
+                children=html.Div(id='keyword-content', children=build_keyword_content())
+            ),
+            html.Hr(className="my-4"),
+            dbc.Button([
+                html.Span("🔄", style={"marginRight": "5px"}),
+                "Generate Keywords"
+            ], id="generate-keywords-button", color="primary", disabled=True, className="w-100"),
         ])
     ])

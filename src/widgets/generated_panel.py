@@ -16,7 +16,7 @@ def build_generated_panel():
                                     id="generated-content",
                                     className="generated-container"
                                 ),
-                                type="circle"
+                                type="default"
                             ),
                             width=6,
                             style={"textAlign": "center", "height": "100%"}
