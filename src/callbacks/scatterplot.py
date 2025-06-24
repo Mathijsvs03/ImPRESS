@@ -59,7 +59,6 @@ def process_selection_and_generate(n_clicks, selected_data):
         return build_keyword_content()
 
     selected_points = selected_data['points']
-
     combined_prompts = " ".join([point['text'] for point in selected_points])
 
     all_keywords = kw_model.extract_keywords(
