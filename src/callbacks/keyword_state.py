@@ -24,9 +24,10 @@ def stop_generating_keywords(_children):
     Output("generate-keywords-button", "disabled"),
     Output("generate-keywords-button", "children"),
     Input("is-generating-keywords", "data"),
+    Input('stored-selection', 'data'),
     State("generate-keywords-button", "children")
 )
-def toggle_keywords_button(is_generating, current_children):
+def toggle_keywords_button(is_generating, stored_data, current_children):
     if is_generating:
         return True, [
             html.Span(
@@ -36,4 +37,8 @@ def toggle_keywords_button(is_generating, current_children):
             ),
             "Generating…"
         ]
+
+    if not stored_data or "points" not in stored_data or len(stored_data["points"]) == 0:
+        return True, [html.Span("🔄", style={"marginRight":"5px"}), "Generate Keywords"]
+
     return False, [html.Span("🔄", style={"marginRight":"5px"}), "Generate Keywords"]
