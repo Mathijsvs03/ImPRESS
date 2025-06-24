@@ -183,12 +183,12 @@ textarea {
 
 .generated-container {
   display: flex;
-  justify-content: center;  
-  align-items: flex-start;   
-  width: 512px;            
-  height: 512px;            
-  margin: 0 auto;            
-  overflow: hidden;          
+  justify-content: center;
+  align-items: flex-start;
+  width: 512px;
+  height: 512px;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 .generated-container img {
@@ -196,5 +196,31 @@ textarea {
   max-height: 100%;
   object-fit: contain;
   display: block;
-  margin: 0;            
+  margin: 0;
+}
+
+.download-button {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  z-index: 2;
+  background-color: transparent !important;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: color 0.2s ease;
+}
+
+.download-button i {
+  font-size: 18px;
+  pointer-events: none;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+}
+
+.download-button:hover {
+  color: #007bff;
+  cursor: pointer;
 }

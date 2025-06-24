@@ -2,6 +2,27 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
+def build_image_download_button(img_src):
+    return html.Div([
+        html.Img(
+            src=img_src,
+            className="gen-image",
+            alt="Generated image",
+            style={"width": "100%", "height": "auto", "borderRadius": "4px"}
+        ),
+        dbc.Button(
+            html.I(className="bi bi-download"),
+            id="download-image-button",
+            className="download-button",
+            color="light",
+            size="sm",
+            n_clicks=0,
+            title="Download image"
+        ),
+        dcc.Download(id="download-image"),
+    ], style={"position": "relative", "display": "inline-block"})
+
+
 def build_generated_panel():
     return dbc.Card(
         [
