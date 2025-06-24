@@ -75,6 +75,7 @@ def generate_image_from_prompt(prompt: str, history: list, figure, n_clicks: int
     figure['data'][0]['x'].append(x)
     figure['data'][0]['y'].append(y)
     figure['data'][0]['customdata'].append(source)
+    figure['data'][0]['text'].append(prompt)
 
     # Store full data for selection
     data = {
