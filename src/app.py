@@ -16,6 +16,7 @@ import src.callbacks.llm_suggestion
 import src.callbacks.scatterplot
 import src.callbacks.prompt_panel
 import src.callbacks.generator_state
+import src.callbacks.keyword_state
 
 os.environ['FLASK_ENV'] = 'development'
 
