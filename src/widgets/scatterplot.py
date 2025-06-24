@@ -26,7 +26,7 @@ def add_images_to_scatterplot(figure):
 
     zoom_scale_x = (max_x - min_x)
     zoom_scale_y = (max_y - min_y)
-    image_scale = 0.1
+    image_scale = 0.2
 
     if images_in_zoom:
         for x, y, image in images_in_zoom:
@@ -75,7 +75,7 @@ def create_scatterplot_figure(projection):
         hovertemplate=None,
         hoverinfo='none',
     )
-    fig.update_layout(dragmode='select')
+    fig.update_layout(dragmode='pan')
     fig.update_xaxes(titlefont=dict(size=12), tickfont=dict(size=10))
     fig.update_yaxes(titlefont=dict(size=12), tickfont=dict(size=10), scaleanchor=None)
     fig.add_trace(
@@ -124,5 +124,5 @@ def create_scatterplot(projection):
                 },
                 className="cluster-field"
             )
-        ])
-    ])
+        ], style={"height": "550px"})
+    ], style={"height": "550px"})
