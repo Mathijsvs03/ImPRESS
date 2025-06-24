@@ -1,6 +1,9 @@
+import threading
 from dash import Input, Output, State, callback, ctx
 from dash.exceptions import PreventUpdate
 from src.llm_utils import get_llm_suggestions
+
+llm_suggestion_lock = threading.Lock()
 
 @callback(
     Output("llm-suggestion-modal", "is_open", allow_duplicate=True),
@@ -32,11 +35,14 @@ def update_llm_text(is_open, prompt_value, guidance_level):
         4: "Significantly improve the prompt while preserving its core idea.",
         5: "Completely rewrite the prompt to maximize creativity and effectiveness."
     }
-
     instruction = guidance_prompt_levels.get(guidance_level, "Improve this prompt.")
 
     try:
-        suggestion = get_llm_suggestions(prompt_value, improvement_instruction=instruction)
+        with llm_suggestion_lock:
+            suggestion = get_llm_suggestions(
+                prompt_value,
+                improvement_instruction=instruction
+            )
         return suggestion
     except Exception as e:
         return f"❌ Error: {str(e)}"

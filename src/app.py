@@ -15,8 +15,9 @@ import src.callbacks.history
 import src.callbacks.llm_suggestion
 import src.callbacks.scatterplot
 import src.callbacks.prompt_panel
+import src.callbacks.generator_state
 
-os.environ['FLASK_ENV'] = 'development'  # Auto-update style.css changes
+os.environ['FLASK_ENV'] = 'development'
 
 
 def run_ui(initial_history=None):
@@ -34,17 +35,15 @@ def run_ui(initial_history=None):
         dcc.Store(id='stored-selection', data=None),
         dcc.Store(id="history-store", data=initial_history or []),
         dcc.Store(id="selected-image", data=(initial_history[0] if initial_history else "")),
+        dcc.Store(id="is-generating",    data=False),
         html.H1('ImPress', className='header-title'),
 
         dbc.Row([
-            # Left column
             dbc.Col(
                 input_panel_widget,
                 className="h-100 d-flex flex-column left-col",
                 width=4
             ),
-
-            # Right column
             dbc.Col([
                 view_panel_widget,
                 build_history_panel()],
