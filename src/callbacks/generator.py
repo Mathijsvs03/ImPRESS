@@ -9,44 +9,56 @@ from dash import Input, Output, callback, State, ALL, ctx
 from diffusers import StableDiffusionPipeline
 from src import utils, config
 
+# Lock for thread-safe generation
 pipe_lock = threading.Lock()
 device = utils.get_device()
+
+# Load pipeline
 pipe = StableDiffusionPipeline.from_pretrained(
     "stable-diffusion-v1-5/stable-diffusion-v1-5",
     torch_dtype=torch.float16
 ).to(device)
-# pipe.enable_attention_slicing()
-# pipe.enable_sequential_cpu_offload()
-
 
 @callback(
     Output("history-store", "data"),
+    Output("selected-image", "data", allow_duplicate=True),
+    Output("selected-prompt", "children", allow_duplicate=True),
     Output("scatterplot", "figure", allow_duplicate=True),
     State("Prompt", "value"),
-    State("NegPrompt", "value"),
     State("history-store", "data"),
     State("scatterplot", "figure"),
     Input("generate-image-button", "n_clicks"),
+    Input({"type": "thumb", "index": ALL}, "n_clicks"),
     prevent_initial_call=True
 )
+def generate_image_from_prompt(prompt: str, history: list, figure, n_clicks: int, thumb_clicks: list):
+    triggered_id = ctx.triggered_id
 
+    # Handle history thumbnail selection
+    if isinstance(triggered_id, dict) and triggered_id.get("type") == "thumb":
+        print('Image thumbnail clicked, updating selected image')
+        clicked_id = triggered_id["index"]
+        selected = next((item for item in reversed(history) if item["id"] == clicked_id), None)
+        if selected is None:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update
+        return dash.no_update, selected, selected["prompt"], dash.no_update
 
-def generate_image_from_prompt(prompt: str, negative_prompt: str, history: list, figure, n_clicks: int):
+    # Handle empty prompt
     if not prompt:
         print('No prompt provided, skipping image generation')
-        return dash.no_update, dash.no_update
+        return dash.no_update, dash.no_update, dash.no_update, dash.no_update
 
     print('Waiting to acquire lock on model to generate image')
-    steps = 50 # Can be adjusted to be controlled through UI (need to add in callback)
+    steps = 50  # Can be made configurable if needed
+
     with pipe_lock:
         image = pipe(
             prompt=prompt,
-            negative_prompt=negative_prompt,
             num_inference_steps=steps,
             num_images_per_prompt=1
         ).images[0]
 
-    # Resize the generated image
+    # Resize and encode image
     image = image.resize(config.GENERATED_IMAGE_SIZE)
     buffer = BytesIO()
     image.save(buffer, format="PNG")
@@ -58,13 +70,19 @@ def generate_image_from_prompt(prompt: str, negative_prompt: str, history: list,
         prompt_data=prompt
     )
 
-    # Update the figure with the new image data
+    # Update figure with new point
     x, y = projection['umap_x'], projection['umap_y']
     figure['data'][0]['x'].append(x)
     figure['data'][0]['y'].append(y)
     figure['data'][0]['customdata'].append(source)
 
-    # Create the data entry for selected image
-    data = {"src": source, "prompt": prompt, "projection_coords": projection}
+    # Store full data for selection
+    data = {
+        "src": source,
+        "prompt": prompt,
+        "projection_coords": projection,
+        "id": str(uuid.uuid4())
+    }
     history.append(data)
-    return history, figure
+
+    return history, data, prompt, figure

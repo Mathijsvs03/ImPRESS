@@ -1,6 +1,5 @@
 from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
-import base64
 import os
 
 from src.Dataset import Dataset
@@ -15,8 +14,10 @@ import src.callbacks.generator
 import src.callbacks.history
 import src.callbacks.llm_suggestion
 import src.callbacks.scatterplot
+import src.callbacks.prompt_panel
 
-os.environ['FLASK_ENV'] = 'development' # Auto-update style.css changes
+os.environ['FLASK_ENV'] = 'development'  # Auto-update style.css changes
+
 
 def run_ui(initial_history=None):
     external_stylesheets = [dbc.themes.BOOTSTRAP]
@@ -30,19 +31,19 @@ def run_ui(initial_history=None):
     view_panel_widget = build_view_panel()
 
     app.layout = dbc.Container([
-        dcc.Store(id="history-store", data=initial_history),
-        dcc.Store(id="selected-image", data=initial_history[0] if initial_history else ""),
+        dcc.Store(id="history-store", data=initial_history or []),
+        dcc.Store(id="selected-image", data=(initial_history[0] if initial_history else "")),
         html.H1('ImPress', className='header-title'),
 
         dbc.Row([
-            # Left column in app view
+            # Left column
             dbc.Col(
                 input_panel_widget,
                 className="h-100 d-flex flex-column left-col",
                 width=4
             ),
 
-            # Right column in app view
+            # Right column
             dbc.Col([
                 view_panel_widget,
                 build_history_panel()],
@@ -59,21 +60,8 @@ def main():
     get_llm_model()
     get_projector_models()
 
-    folder = "src/assets/templates"
-    template_history = []
-    if not os.path.exists(folder):
-        template_history = []
-
-    for filename in sorted(os.listdir(folder)):
-        if filename.lower().endswith((".png", ".jpg", ".jpeg")):
-            path = os.path.join(folder, filename)
-            with open(path, "rb") as f:
-                encoded = base64.b64encode(f.read()).decode()
-                src = f"data:image/png;base64,{encoded}"
-                template_history.append({"src": src, "prompt": f"Template: {filename}"})
-
     print("Starting Dash App")
-    run_ui(initial_history=template_history)
+    run_ui(initial_history=[])
 
 
 if __name__ == '__main__':
