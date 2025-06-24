@@ -17,12 +17,16 @@ import src.callbacks.scatterplot
 import src.callbacks.prompt_panel
 import src.callbacks.generator_state
 import src.callbacks.keyword_state
+import src.callbacks.img_download
 
 os.environ['FLASK_ENV'] = 'development'
 
 
 def run_ui(initial_history=None):
-    external_stylesheets = [dbc.themes.BOOTSTRAP]
+    external_stylesheets = [
+        dbc.themes.BOOTSTRAP,
+        dbc.icons.BOOTSTRAP,
+    ]
     app = Dash(
         __name__,
         external_stylesheets=external_stylesheets,

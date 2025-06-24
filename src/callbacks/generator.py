@@ -8,7 +8,7 @@ from dash import Input, Output, State, ALL, ctx, callback, html
 from diffusers import StableDiffusionPipeline
 
 from src import utils, config
-from src.Dataset import Dataset
+from src.widgets.generated_panel import build_image_download_button
 
 # 1) Lock and device setup
 pipe_lock = threading.Lock()
@@ -41,11 +41,7 @@ def generate_image_from_prompt(prompt, history, figure, gen_clicks, thumb_clicks
         if not sel:
             # nothing to update
             return (dash.no_update,)*5
-        img = html.Img(
-            src=sel["src"],
-            className="gen-image",
-            alt="Generated image"
-        )
+        img = build_image_download_button(sel["src"])
         return dash.no_update, sel, sel["prompt"], dash.no_update, img
 
     # — 2) Empty prompt? do nothing —
@@ -90,11 +86,7 @@ def generate_image_from_prompt(prompt, history, figure, gen_clicks, thumb_clicks
     history.append(entry)
 
     # — 7) Build the <img> for display —
-    gen_img = html.Img(
-        src=src64,
-        className="gen-image",
-        alt="Generated image"
-    )
+    gen_img = build_image_download_button(src64)
 
     # — 8) Return all outputs —
     return history, entry, prompt, figure, gen_img
