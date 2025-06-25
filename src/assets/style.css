@@ -56,6 +56,31 @@ textarea {
   background: #829198;
 }
 
+.keyword-slider .rc-slider-mark-text {
+    white-space: nowrap;
+    padding: 0 6px;
+}
+
+.keyword-slider .rc-slider-track {
+    background-color: transparent !important;
+}
+
+.keyword-slider .rc-slider-dot {
+    background-color: #ccc !important;
+    border-color: #ccc !important;
+}
+
+.keyword-slider .rc-slider-handle {
+    border-color: #007bff;
+}
+
+.keyword-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 550px;
+}
+
 .view-container {
   height: 100%;
 }
@@ -104,16 +129,17 @@ textarea {
 }
 
 .history-entry {
-    width: 200px;
-    height: 188px;
-    margin-right: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f8f9fa;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  width: 200px;
+  height: 188px;
+  margin-right: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
 }
 
 

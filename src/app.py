@@ -12,6 +12,7 @@ from src.widgets.history_panel import build_history_panel
 import src.callbacks.view
 import src.callbacks.generator
 import src.callbacks.history
+import src.callbacks.keywords
 import src.callbacks.llm_suggestion
 import src.callbacks.scatterplot
 import src.callbacks.prompt_panel
