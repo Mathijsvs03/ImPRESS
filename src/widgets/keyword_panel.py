@@ -25,7 +25,7 @@ def build_keyword_content(keywords=None):
     if not keywords:
         return html.P("Make a selection on the scatterplot to generate style keywords.")
     return html.Div([
-        html.H5("Keyword Distribution"),
+        html.H5("Keyword Suggestions", className="mb-3"),
         html.Div([keyword_item(kw, i) for i, kw in enumerate(keywords)], id="keyword-list",
                  className="keyword-list")
     ])
