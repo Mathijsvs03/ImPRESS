@@ -42,20 +42,15 @@ def run_ui(initial_history=None):
         dcc.Store(id="history-store", data=initial_history or []),
         dcc.Store(id="selected-image", data=(initial_history[0] if initial_history else "")),
         dcc.Store(id="is-generating",    data=False),
-        html.H1('ImPress', className='header-title'),
+        # html.H1('ImPress', className='header-title'),
 
         dbc.Row([
-            dbc.Col(
-                input_panel_widget,
-                className="h-100 d-flex flex-column left-col",
-                width=4
-            ),
-            dbc.Col([
-                view_panel_widget,
-                build_history_panel()],
-                width=8
-            )
-        ], className='gx-4 gy-2 col-container', align='start')
+            dbc.Col(input_panel_widget, className="main-col", width=4, style={"height": "100%", "padding-bottom": "10px"}),
+            dbc.Col(view_panel_widget, className="main-col with-divider", width=8, style={"height": "100%", "padding-bottom": "10px"})
+        ], className='top-row', style={"height": "80%"}),
+        dbc.Row([
+            dbc.Col(build_history_panel(), className="main-col", style={"height": "100%"})
+        ], className='bottom-row', style={"height": "20%"})
     ], className='main-container', fluid=True)
 
     app.run(debug=True, use_reloader=False, port=8050)

@@ -1,3 +1,40 @@
+.main-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.bottom-row { height: 30%; }
+.top-row{ height: 70%; display: flex;}
+
+.main-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.main-col.with-divider {
+  position: relative;
+}
+
+.main-col.with-divider::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 10px;
+  left: 0;
+  width: 1px;
+  background-color: #dee2e6;
+  pointer-events: none;
+}
+
+.tab-parent, .tab-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 html, body {
     background-color: #d0dadf;
     margin: 0;
@@ -18,23 +55,9 @@ textarea {
   background-clip: padding-box;
 }
 
-.main-container {
-  height: 100%;
-}
-
 .header-title {
   text-align: left;
   margin: 10px;
-}
-
-.col-container {
-  height: 100%;
-  overflow-y: auto;
-}
-
-.left-col {
-  border-right: 1px solid #ccc;
-  padding-right: 15px;
 }
 
 .modal-container {
@@ -44,16 +67,6 @@ textarea {
 .prompt-field {
   max-height: 40vh;
   overflow-y: auto;
-}
-
-.dist-list {
-  max-height: 40vh;
-  overflow-y: auto;
-}
-
-.dist-graph {
-  height: 100px;
-  background: #829198;
 }
 
 .keyword-slider .rc-slider-mark-text {
@@ -75,64 +88,41 @@ textarea {
 }
 
 .keyword-list {
-  display: flex;
-  flex-direction: column;
   overflow-y: auto;
-  max-height: 550px;
-}
-
-.view-container {
-  height: 100%;
-}
-
-.view-items {
-  margin-bottom: 0px;
-}
-
-.view {
-  height: 100%;
-  width: 100%;
-  padding: 10px;
-  overflow-y: auto;
-  /* max-height: 400px; */
+  max-height: 450px;
 }
 
 .cluster-field {
   width: 100%;
-  height: 512px;
+  height: 100%;
+  flex: 1;
   background-color: transparent !important;
   border: none !important;
-}
-
-.image-field {
-  width: 100%;
-  height: 512px;
-  background-color: transparent !important;
-  border: none !important;
-  text-align: center;
-  line-height: 512px;
-  color: #666;
 }
 
 .gen-image {
-  max-width: 512px;
-  max-height: 512px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  border-radius: 4px;
 }
 
 .history-panel {
   display: flex;
   flex-direction: row;
+  flex: 1;
   overflow-x: auto;
-  padding: 10px;
+  overflow-y: hidden;
   height: 100%;
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 .history-entry {
-  width: 200px;
-  height: 188px;
+  height: 100%;
+  width: auto;
   margin-right: 10px;
-  padding: 10px;
+  /* padding: 10px; */
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f8f9fa;
@@ -148,6 +138,7 @@ textarea {
   background: none;
   text-align: left;
   width: 100%;
+  height: 100%;
 }
 
 .history-prompt {
@@ -160,10 +151,11 @@ textarea {
 }
 
 .history-image {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 3px;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  width: auto;
+  object-fit: cover;
+  border-radius: 3px;
 }
 
 .prompt-hover {
@@ -209,11 +201,11 @@ textarea {
 
 .generated-container {
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
-  width: 512px;
-  height: 512px;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
   overflow: hidden;
 }
 

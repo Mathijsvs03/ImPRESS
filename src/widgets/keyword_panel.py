@@ -32,7 +32,6 @@ def build_keyword_content(keywords=None):
 
 def build_keyword_panel():
     return html.Div([
-
         dcc.Store(id="is-generating-keywords", data=False),
 
         dbc.Card([
@@ -63,9 +62,9 @@ def build_keyword_panel():
                 ),
 
                 html.Div(build_prompt_from_keywords_modal(), className='modal-container')
-            ])
-        ])
-    ])
+            ], style={"height": "100%"})
+        ], style={"height": "100%"})
+    ], style={"height": "100%"})
 
 def build_prompt_from_keywords_modal():
     return dbc.Modal([

@@ -10,8 +10,7 @@ def build_input_panel():
         value="prompt",
         children=[
             dcc.Tab(build_prompt_panel(), label="Prompt", value="prompt"),
-            dcc.Tab(build_keyword_panel(), label="Keywords", value="keyword")
-        ],
-        className="view-items"
+            dcc.Tab(build_keyword_panel(), label="Keywords", value="keyword"),
+        ]
     )
 

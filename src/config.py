@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 # UI config
-GENERATED_IMAGE_SIZE = (512, 512)
+GENERATED_IMAGE_SIZE = (1024, 1024)
 MAX_IMAGES_IN_ZOOM = 100
 
 # path configuration
