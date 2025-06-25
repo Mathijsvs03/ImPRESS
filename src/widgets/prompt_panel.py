@@ -78,5 +78,5 @@ def build_prompt_modal():
         dbc.ModalFooter([
             dbc.Button("Accept", id="accept-llm-suggestion", color="success", className="me-2"),
             dbc.Button("Decline", id="decline-llm-suggestion", color="secondary")
-        ])
+        ], id="llm-suggestion-modal-footer")
     ], id="llm-suggestion-modal", is_open=False)

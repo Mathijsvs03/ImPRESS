@@ -20,6 +20,15 @@ def open_modal_immediately(n_clicks, prompt_value):
     return True, "⏳ Generating prompt suggestion..."
 
 @callback(
+    Output("llm-suggestion-modal-footer", "style"),
+    Input("llm-suggestion-modal-body", "children"),
+)
+def toggle_modal_footer_visibility(body_content):
+    if isinstance(body_content, str) and "Generating prompt suggestion..." in body_content:
+        return {"display": "none"}
+    return {}
+
+@callback(
     Output("llm-suggestion-modal-body", "children", allow_duplicate=True),
     Input("llm-suggestion-modal", "is_open"),
     State("Prompt", "value"),
@@ -75,9 +84,22 @@ def handle_modal_action(accept_click, decline_click, suggestion_text, current_pr
     prevent_initial_call=True
 )
 def open_modal_keywords_immediately(n_clicks, prompt_value):
-    if not n_clicks or not prompt_value:
+    if not n_clicks:
         raise PreventUpdate
+    if not prompt_value or prompt_value.strip() == "":
+        return True, "⚠️ Please enter a starting prompt before generating suggestions."
     return True, "⏳ Generating prompt suggestion..."
+
+@callback(
+    Output("keywords-suggestion-modal-footer", "style"),
+    Input("keywords-suggestion-modal-body", "children"),
+)
+def toggle_modal_keywords_footer_visibility(body_content):
+    if isinstance(body_content, str) and "Please enter a starting prompt" in body_content:
+        return {"display": "none"}
+    if isinstance(body_content, str) and "Generating prompt suggestion..." in body_content:
+        return {"display": "none"}
+    return {}
 
 @callback(
     Output("keywords-suggestion-modal-body", "children", allow_duplicate=True),

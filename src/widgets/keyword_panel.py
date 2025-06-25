@@ -57,7 +57,7 @@ def build_keyword_panel():
                 dbc.Button(
                     [html.Span("✨", style={"marginRight": "5px"}), "Generate Prompt from Keywords"],
                     id="generate-prompt-button-keywords",
-                    color="primary",
+                    color="secondary",
                     style={"display": "none"},
                     className="w-100"
                 ),
@@ -74,5 +74,5 @@ def build_prompt_from_keywords_modal():
         dbc.ModalFooter([
             dbc.Button("Accept", id="accept-keywords-suggestion", color="success", className="me-2"),
             dbc.Button("Decline", id="decline-keywords-suggestion", color="secondary")
-        ])
+        ], id="keywords-suggestion-modal-footer")
     ], id="keywords-suggestion-modal", is_open=False)
