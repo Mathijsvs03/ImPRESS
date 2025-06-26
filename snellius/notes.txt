@@ -15,8 +15,8 @@ Now we can run the app
 
 6. source venv/bin/activate
 
-6.b Ik had een issue met de venv op een srun node, dus mogelijk moet je op de srun node nog eens "pip install -r requirements.txt" runnen
+7. Make sure the requirements are installed in the enviroment: "pip install -r requirements.txt"
 
-7. python -m src.app
+8. python -m src.app
 
-8. On local device: ssh -L 8050:127.0.0.1:8050 -J <user>@snellius.surf.nl <user>@<node hostname>
+9. On local device: ssh -L 8050:127.0.0.1:8050 -J <user>@snellius.surf.nl <user>@<node hostname>
