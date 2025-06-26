@@ -37,7 +37,7 @@ pip install -r requirements.txt
 ## Run ImPRESS Locally
 
 ```bash
-python src.main
+python -m src.app
 ```
 
 Access the app at [http://127.0.0.1:8050/](http://127.0.0.1:8050/)
