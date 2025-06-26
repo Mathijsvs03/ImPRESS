@@ -8,7 +8,7 @@ def build_image_download_button(img_src):
             src=img_src,
             className="gen-image",
             alt="Generated image",
-            style={"width": "100%", "height": "auto", "borderRadius": "4px"}
+            style={"width": "100%", "height": "100%", "objectFit": "contain", "borderRadius": "4px"}
         ),
         dbc.Button(
             html.I(className="bi bi-download"),
@@ -20,59 +20,51 @@ def build_image_download_button(img_src):
             title="Download image"
         ),
         dcc.Download(id="download-image"),
-    ], style={"position": "relative", "display": "inline-block"})
+    ], style={"position": "relative", "display": "flex", "alignItems": "center", "justifyContent": "center", "height": "100%", "width": "100%"})
 
 
 def build_generated_panel():
-    return dbc.Card(
-        [
-            dbc.CardBody(
-                dbc.Row(
-                    [
-
-                        dbc.Col(
-                            dcc.Loading(
-                                html.Div(
-                                    "Please generate an image to begin inspecting it.",
-                                    id="generated-content",
-                                    className="generated-container"
-                                ),
-                                type="default"
-                            ),
-                            width=6,
-                            style={"textAlign": "center", "height": "100%"}
-                        ),
-
-                        dbc.Col(
-                            html.Div(
-                                [
-                                    dcc.Clipboard(
-                                        target_id="selected-prompt",
-                                        title="Copy to clipboard",
-                                        style={
-                                            "position": "absolute",
-                                            "top": "10px",
-                                            "right": "10px",
-                                            "zIndex": "10",
-                                            "cursor": "pointer"
-                                        }
-                                    ),
-                                    html.Div(
-                                        html.P(id="selected-prompt", className="prompt-text"),
-                                        className="prompt-box"
-                                    )
-                                ],
-                                className="prompt-wrapper",
-                                style={"height": "100%", "overflowY": "auto"}
-                            ),
-                            width=6,
-                            style={"borderLeft": "2px solid #ccc", "paddingLeft": "20px"}
-                        )
-                    ],
-                    style={"height": "100%"}
+    return dbc.Card([
+        dbc.CardBody(
+            dbc.Row([
+                dbc.Col(
+                    dcc.Loading(
+                        html.Div(
+                            "Please generate an image to begin inspecting it.",
+                            id="generated-content",
+                            className="generated-container"
+                        ), style={"height": "100%", "width": "100%"},
+                        type="default"
+                    ),
+                    width=6,
+                    style={"textAlign": "center", "height": "100%", "display": "flex", "alignItems": "center", "justifyContent": "center"}
                 ),
-                style={"height": "550px"}
-            )
-        ],
-        style={"height": "550px"}
-    )
+
+                dbc.Col(
+                    html.Div(
+                        [
+                            dcc.Clipboard(
+                                target_id="selected-prompt",
+                                title="Copy to clipboard",
+                                style={
+                                    "position": "absolute",
+                                    "top": "10px",
+                                    "right": "10px",
+                                    "zIndex": "10",
+                                    "cursor": "pointer"
+                                }
+                            ),
+                            html.Div(
+                                html.P(id="selected-prompt", className="prompt-text"),
+                                className="prompt-box"
+                            )
+                        ],
+                        className="prompt-wrapper",
+                        style={"height": "100%", "overflowY": "auto"}
+                    ),
+                    width=6,
+                    style={"borderLeft": "2px solid #ccc", "paddingLeft": "20px"}
+                )
+            ], style={"height": "100%"})
+        , style={"height": "100%"})
+    ], style={"height": "100%"})

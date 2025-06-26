@@ -10,6 +10,5 @@ def build_view_panel():
         children=[
             dcc.Tab(build_generated_panel(), label="Selected Image", value="generated"),
             dcc.Tab(build_cluster_panel(), label="Clustered Images", value="cluster"),
-        ],
-        className="view-items"
+        ]
     )

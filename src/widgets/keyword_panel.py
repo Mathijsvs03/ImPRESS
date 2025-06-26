@@ -25,14 +25,13 @@ def build_keyword_content(keywords=None):
     if not keywords:
         return html.P("Make a selection on the scatterplot to generate style keywords.")
     return html.Div([
-        html.H5("Keyword Distribution"),
+        html.H5("Keyword Suggestions", className="mb-3"),
         html.Div([keyword_item(kw, i) for i, kw in enumerate(keywords)], id="keyword-list",
                  className="keyword-list")
     ])
 
 def build_keyword_panel():
     return html.Div([
-
         dcc.Store(id="is-generating-keywords", data=False),
 
         dbc.Card([
@@ -63,9 +62,9 @@ def build_keyword_panel():
                 ),
 
                 html.Div(build_prompt_from_keywords_modal(), className='modal-container')
-            ])
-        ])
-    ])
+            ], style={"height": "100%"})
+        ], style={"height": "100%"})
+    ], style={"height": "100%"})
 
 def build_prompt_from_keywords_modal():
     return dbc.Modal([

@@ -67,9 +67,9 @@ def build_prompt_panel():
                 style={"display": "none"}),
 
                 html.Div(build_prompt_modal(), className='modal-container')
-            ])
-        ], className="main-container")
-    ])
+            ], style={"height": "100%"})
+        ], style={"height": "100%"})
+    ], style={"height": "100%"})
 
 def build_prompt_modal():
     return dbc.Modal([

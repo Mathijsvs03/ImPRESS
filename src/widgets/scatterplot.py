@@ -124,5 +124,5 @@ def create_scatterplot(projection):
                 },
                 className="cluster-field"
             )
-        ], style={"height": "550px"})
-    ], style={"height": "550px"})
+        ], style={"height": "100%"})
+    ], style={"height": "100%"})
