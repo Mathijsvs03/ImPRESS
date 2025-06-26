@@ -1,7 +1,7 @@
 # ImPRESS: Iterative Prompt Refinement through Semantic Slider Feedback and Foundation Model Guidance  
 ### Multimedia Analytics Group 9
 
-<img src="images/teaser.png" alt="ImPRESS Preview" width="700" />
+<img src="images/teaser.png" alt="ImPRESS Preview" width="100%" style="max-width: 1000px;"/>
 
 **ImPRESS** is an interactive dashboard for analyzing and refining AI-generated prompts using semantic sliders and multimodal feedback. It supports experimentation with foundation models in a visually guided interface.
 
